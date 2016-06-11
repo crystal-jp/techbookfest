@@ -1,0 +1,1029 @@
+# Rubyとは似て非なるCrystal
+
+CrystalはRubyの文法に強くインスパイアされたプログラム言語であるため，Crystalのコードにはクラスやモジュール，メソッドの定義，ブロックやイテレータなど，Rubyのプログラミング経験があれば見慣れた表現が多く登場します。
+
+実際，単純なものであればCrystalのコンパイラでもRubyのインタプリタでもエラーなく実行可能なコードを書くこともできます。例えば，下記は私が書いた「ズンドコキヨシコード」[^zndk]ですが，Crystal 0.17系でもRuby 2.3系でも問題なく実行可能です。
+
+```crystal
+zd = 0
+until (zd == 30)
+  puts (zd = ((zd << 1) + rand(2)) & 31).odd? ? "ズン" : "ドコ"
+end
+puts "キ・ヨ・シ!!"
+```
+
+[^zndk]: 「ズン」「ドコ」のいずれかをランダムで出力し続け，「ズン」「ズン」「ズン」「ズン」「ドコ」のパターンが出たら「キ・ヨ・シ！」と出力した後で終了する。【参照】<https://twitter.com/kumiromilk/status/707437861881180160>
+
+こうした面では，Rubyによるプログラミング経験があると，Crystalは比較的とっつきやすい言語だと言えます。
+
+しかし，Rubyと同じように書かれたプログラムがいつもそのままCrystalでも動作するとは限りません。というよりむしろ，Rubyそのままでは動かない場合がほとんどです。Crystalの主要な開発メンバーであるAry Borenszweig氏が「CrystalはRubyの文法や構文を取り入れてはいるが，Rubyそのものではない」といった趣旨の発言をされているように[^notrb]，CrystalはRubyとは異なるポリシーのもと開発されている完全に独立したプログラミング言語です。
+
+[^notrb]: <q>Crystal borrows Ruby's syntax and some of its semantics, but it's not Ruby. Just like C++ borrows C syntax and some of its semantics, but it's not C.</q>【参照】<https://groups.google.com/d/msg/crystal-lang/raH5z8GqdJ8/NzDkreGtCAAJ>
+
+そのため，Crystalに手を出した当初は，なまじRubyの知識があるがゆえにRubyの常識が通用しなくて戸惑う場面に多々遭遇します。
+
+そこで，ここでは数値や文字列といった基本的なオブジェクトを中心に，Ruby経験者が躓きがちなポイントや，こんなことできるんだと驚いたポイントをピックアップして紹介したいと思います。
+
+## 型
+
+CrystalがRubyに対して大きく異なる２つの特徴の１つが静的な型システムを持っていることです（もう１つはインタプリタ型ではなくコンパイル型言語であること）。ですので，Crystalの変数やメソッドの引数，返り値などは型の情報持っていて，メソッドに引数の型が指定されているのに，その型以外のオブジェクトを渡すとエラーになります。
+
+```crystal
+# 姓名を受け取ってイニシャルを返す
+def initial(namef : String, namel : String) : String
+  "#{namef[0].upcase}.#{namel[0].upcase}."
+end
+
+p initial("john", "doe")
+# => ”J.D."
+
+p initial(1, 2)
+# => Error: no overload matches 'initial' with types Int32, Int32
+```
+
+とはいえ，いちいちすべての変数やメソッドの引数，返り値に型を指定してやる必要はありません。Crystalのコンパイラには型推論の機能があり，変数に与えられた初期値や，プログラム中でメソッドに引数として与えられたオブジェクトの型，メソッドが返すオブジェクトの型などから，それらの型を推定してくれます。
+
+```crystal
+# 変数初期化時の型推論
+
+a = "abc"
+p typeof(a)
+# => String
+# 文字列リテラルで初期化されたからこれは String 型
+
+b = a.upcase
+typeof(b)
+# => String
+# String#upcase の返り値は String 型だからこれも String 型
+```
+
+```crystal
+# メソッド返り値の型推論
+def foo(obj)
+  obj.to_s
+end
+
+p typeof(foo(123))
+# => String
+# foo メソッドは必ず String 型の値を返すからこれも String 型
+```
+
+### ユニオン型
+
+さて，では状況によって_String_オブジェクトか_Symbol_オブジェクトを返す可能性があるメソッドの場合はどうなるでしょう。次の例のように，_String_型か_Symbol_型のどちらかであるという状態をCrystalでは_String_型と_Symbol_型のユニオン型（union type）であると解釈します。
+
+```crystal
+# シンボルが :string だったら文字列にして，そうでなければそのまま返す
+def bar(s : Symbol)
+  s == :string ? s.to_s : s  
+end
+
+c = bar(:string)
+p typeof(c)
+# => (String | Symbol)
+```
+
+上記コードだけを考えれば，実行時の変数`c`の値は必ず_String_型になりますが，メソッド`bar`は_String_の値と_Symbol_型のどちらも返す可能性がありますので，変数`c`は_(String | Symbol)_型であるとコンパイラに認識されます。そして，コンパイラがユニオン型だと認識しているオブジェクトは，その時の値がどの型であるかにかかわらず，合成元の型すべてが共通して持つメソッドしか使用できません。このように，実行時に変数の値となっているオブジェクトの型と，コンパイラが認識しているコンパイル時の型が異なる点には注意が必要です。
+
+```crystal
+# 先ほどの続き
+
+# #not_nil! はString型にもSymbol型にもあるので使用可
+p c.not_nil!
+# => "string"
+
+# #upcase はString型にしかないのでエラー
+p c.upcase
+# => Error: undefined method 'upcase' for Symbol (compile-time type is (String | Symbol))
+```
+
+ユニオン型だとコンパイラに認識されているオブジェクトを，その時の値の型として使用したい場合には何らかの手段でコンパイラに対して型を特定してやる必要があります。方法はいろいろありますが，例えば`if`文の条件として`#is_a?`メソッドで値の型を判定すると，その`if`文の中ではオブジェクトの型が特定されます。
+
+```crystal
+# if 文の内側はString型の場合しか到達しない
+if c.is_a?(String)
+  p c.upcase
+  # => "STRING"
+end
+```
+
+Rubyなどで良く見かける「ある条件を満たしていれば値を返し，そうでなければ`nil`を返す」メソッドなどはCrystalでは返り値の型が，条件達成時に返される値の型と_Nil_型のユニオン型になります。（ある型と_Nil_型のユニオン型は，特別にその型の名前に ? を加えた型名で表現することができます。例：_String?_, _Symbol?_）
+
+### メソッドのオーバーロード
+
+Rubyではメソッドの引数に型を指定できません。もし同じ引数として異なる複数の型のオブジェクトを処理できるようにするには，メソッド内で型チェックを行って処理を分岐させる必要がありました。
+
+Crystalでは，引数の型を特定できるようになった恩恵として，メソッドのオーバーロードが可能になっています。つまり，同じメソッド名であっても受け取る引数の型ごとに異なる処理を記述することができます。
+
+```crystal
+# 整数値か16進数を表す文字列を受け取って２倍した値を返す(Ruby)
+
+def double(value)
+  value = value.to_i(16) if value.is_a?(String)
+  value * 2
+end
+
+double(2)
+# => 4
+double("a")
+# => 20
+```
+
+```crystal
+# 整数値か16進数を表す文字列を受け取って２倍した値を返す(Crystal)
+
+# 引数が整数型の場合の処理
+def double(value : Int)
+  value * 2
+end
+
+# 引数が文字列型の場合の処理
+def double(value : String)
+  double(value.to_i(16))
+end
+
+double(2)
+# => 4
+double("a")
+# => 20
+```
+
+上の例くらいであれば，Ruby方式でもそこまで面倒でもありませんが，型チェック後の処理のボリュームが増えてくると，結局Rubyでも引数の型ごとの処理をprivateメソッドに切り出してオーバーロードっぽい動きをさせることになったりします。言語仕様としてオーバーロードが可能なことで，便利な場面はたくさんあるのではないでしょうか。
+
+### インスタンス変数，クラス変数の型
+
+バージョン0.16.0から，インスタンス変数とクラス変数はクラス定義内でコンパイラが型を特定できないとエラーが発生するようになりました。この挙動に対する一番明確な対応は，クラス定義の中でインスタンス変数の型を明示することです。
+
+```crystal
+class A
+  # @aはString型
+  @a : String
+
+  def initialize(@a)
+    # 余談：Crystalではメソッド引数を直接インスタンス変数に代入できます。便利!!
+  end
+end
+```
+
+また，Rubyの`attr_*`に相当する`getter`，`setter`，`property`マクロに型注釈つけたり，`#initialize`で引数を直接インスタンス変数で受ける際に型制約をつけることでもインスタンス変数の型を明示することができます。
+
+```crystal
+class A
+  # getterがアクセスするインスタンス変数 @a はString型
+  getter a : String
+
+  def initialize(@a)
+  end
+end
+```
+```crystal
+class A
+  # A.new の第一引数はString型限定だから @a はString型
+  def initialize(@a : Sring)
+  end
+end
+```
+
+こうした形で型が明示されなかったとしても，Crystalコンパイラは`#initialize`内でインスタンス変数が初期化される際に様々な方法でインスタンス変数の型を特定しようとします。
+
+1. リテラルで初期化する
+
+    ```crystal
+    @a = "a" # Stringリテラルだから @a はString型
+    ```
+
+2. `.new`メソッドで初期化する
+
+    ```crystal
+    @a = Time.new(2016, 6, 24) # Timeオブジェクトを生成したのだから @a はTime型
+    ```
+
+3. コンパイラが返り値の型を知ってるメソッドで初期化する
+
+    ```crystal
+    @a = Time.now # Time.nowはTimeオブジェクト返すから @a はTime型
+    ```
+
+4. 型制約つきの`#initialize`の引数で初期化する
+
+    ```crystal
+    def initialize(a : String)
+      @a = a # 引数 a はString型だから @a もString型
+    end
+    ```
+
+5. デフォルト値が指定されている`#initialize`の引数で初期化する
+
+    ```crystal
+    def initialize(a = "a")
+      @a = a # 引数 a はString型のデフォルト値を持っているから @a もString型
+    end
+    ```
+
+6. 型を明示した上で未初期化である事を明示する
+
+    ```crystal
+    @a = uninitialized String # String型だけど未初期化状態
+                              # プリミティブでない型の場合 @a を初期化前に利用するとエラーになるので注意
+    ```
+
+7. コンパイラが返り値の型を知っているCライブラリ関数で初期化する
+
+    ```crystal
+    # 注；まったく実用的なコードではありません
+    @a = LibC.gai_strerror(1) # LibC.gai_strerror の返り値は LibC::Charのポインタなので
+                              # @a はPointer(UInt8)型
+    ```
+
+8. 特定の型のポインタで指定するCライブラリ関数の引数に`out`パラメータ付で指定して初期化する
+
+    ```crystal
+    # 注；まったく実用的なコードではありません（要 require "big_int"）
+    LibGMP.init(out @a) # LibGMP.initの第一引数はLibGMP::MPZ型のポインタなので @a はLibGMP::MPZ型
+    ```
+
+こうした型推論の流れを行っても最終的に型を特定できなかったインスタンス変数があると，コンパイルエラーが発生します。
+
+```crystal
+class A
+  def initialize(@a)
+  end
+end
+
+a = A.new("a")
+# => Can't infer the type of instance variable '@a' of A
+```
+
+実は 0.16.0 より前のバージョンでは，こうした指定がなくてもその都度実行時に与えられる値の型からインスタンス変数などの型を推定してくれていました。コードをかく点では便利な仕様だったのですが，この仕様だとライブラリで提供される_A_型を使用する場合に，プログラムBで呼び出した場合とプログラムCで呼び出した場合とで_A_型に含まれるインスタンス変数の型が変化する，という状況が発生してしまいます。このことは，_A_型の構造が実際に呼び出されるまで確定できない，ということを意味しますので，コンパイルの度に読み込まれるすべてのライブラリをコンパイルし直す必要があります。プログラムの規模が大きくなってくるとこれはかなり効率の悪い方式です。
+
+Crystalの開発チームは将来インクリメンタルコンパイル（コードに変更があった部分だけをコンパイル対象とすることで，トータルのコンパイル時間を短縮する手法）の仕組みをCrysalに実装する計画を持っており，0.16.0におけるこの仕様変更もその実装を見据えたものであると公表されています[^inccmp]。
+
+[^inccmp]: <q>The reason of this change is to allow, in the future, implementing incremental compilation and improving overall compile times and memory usage.</q>【参照】<http://crystal-lang.org/2016/05/05/crystal-0.16.0-released.html>
+
+## 数値
+
+### 整数が桁あふれする
+
+```crystal
+p 2000000000 + 2000000000
+# Ruby    => 4000000000
+# Crystal => -294967296
+```
+
+Rubyでは_Fixnum_と_Bignum_の2種類の整数型があり，仮に_Fixnum_の範囲を超えたとしても_Bignum_へ自動変換されるため，整数値の桁あふれを気にする場面はほぼありません。
+
+一方，Crystalでは_Fixnum_に相当する固定長整数型として_Int8_，_Int16_，_Int32_，_Int64_，_UInt8_，_UInt16_，_UInt32_，_UInt64_の８種類が，_Bignum_に相当する可変長整数型として_BigInt_が用意されており，固定長整数型の値がその範囲を超えたとしても大きな型への自動変換は行われません。
+
+このうち固定長整数型は，型名が _Int_ で始まっていれば符号つき（負の値も扱える），_UInt_ で始まっていれば符号なし（0以上の値のみを扱う）の整数型であることを表し，その後ろの数字で内部的なデータのサイズ（ビット数）を表しています。これらの整数型はそれぞれに扱える値の範囲が異なっており，Nビットの整数型の場合，符号つきでは -2<sup>N-1</sup>から 2<sup>N-1</sup> - 1までの値を，符号なしでは 0 から 2<sup>N</sup> - 1までの値を扱うことができます。
+
+そのため，数値の加算などで，計算結果がレシーバ（`+` などの左側の値）の型の範囲をはみ出してしまうと，桁あふれ（オーバーフロー）が発生します。先ほどの計算結果が負の値になってしまったのもオバーフローが原因です。
+
+C言語などをカジったことがあり，数値をビット列として理解する習慣のある方にとっては自明な話ではありますが，なぜ結果かマイナスになってしまったのかよくわからない方は，Wikipediaの「整数型[^int]」や「符号付数値表現[^sigint]」などを読んでみられると良いのではないでしょうか。
+
+[^int]: 【参照】<https://ja.wikipedia.org/wiki/整数型>
+[^sigint]: 【参照】<https://ja.wikipedia.org/wiki/符号付数値表現>
+
+なお，各固定長の整数型には`MAX`/`MIN`という名前のクラス定数が用意されていて，それぞれの型で扱える値の最大値/最小値を取得できます。
+
+```crystal
+p Int32::MAX
+# =>  2147483647
+
+p Int32::MIN
+# => -2147483648
+```
+
+ちなみに，小数にもRubyの_Float_型に対して，Crystalでは_Float32_，_Float64_と2種類の浮動小数点型が用意されています。こちらも後ろの数字によって内部のデータサイズ（ビット数）が異なり，_Float32_型より_Float64_型の方がより高い精度を得られます。
+
+### `String#to_i`がエラーになる
+
+```crystal
+p "3000000000".to_i
+# Ruby    => 3000000000
+# Crystal => invalid Int32: 3000000000 (ArgumentError)
+```
+
+_String_型など整数値以外の型を整数に変換する`#to_i`メソッドは，標準で_Int32_型の値を返します。そのため_Int32_型の範囲を超えるような値を表現する文字列を`#to_i`で変換しようとすると不正な値としてエラーが発生します。
+
+ただ，この動作に関してはエラーを返してくれる_String_はまだ親切な方で，`Float64#to_i`などは値が`Int32::MAX`より大きかった場合などでもエラーを出さず，シレッとオーバーフローした数値を返してきます。結果として「エラーは出ないけれど何故か結果がおかしい」というバグ潰しにおいて非常にやっかいな状況に陥る可能性がありますのでご注意ください。
+
+```crystal
+f = 2147483648.0 # Int32::MAX + 1
+p f.to_i
+# => -2147483648
+```
+
+Crystalでは，`#to_i`を持つ型であればたいていの場合，各整数型へ変換するための個別のメソッド，`#to_i8`，`#to_i16`，`#to_i32`，`#to_i64`，`#to_u8`，`#to_u16`，`#to_u32`，`#to_u64`が用意されていますので，適切な変換メソッドを使用するようにしましょう。
+
+ちなみに，浮動小数点型は標準で_Float64_型になり，`#to_f`も_Float64_型を返します。また，整数型の場合と同様に型を明示して変換する`#to_f32`，`#to_f64`も用意されています。
+
+### 整数リテラルで指定した値の型が変わる
+
+```crystal
+p typeof(0)
+# => Int32
+
+p typeof(2147483648)
+# => Int64
+
+p typeof(9223372036854775808)
+# => UInt64
+```
+
+先ほど「固定長整数オブジェクトはお互いに自動変換はされない」と説明しましたが，整数リテラルは値が大きくなると，その値を扱える型が自動的に選択されます。（ただし，`UInt64::MAX`を超えるとエラー）
+
+そのため，メソッド引数に特定の整数型を指定していると，リテラルの値によってエラーになる場合があります。
+
+```crystal
+def double(i : Int32)
+  i * 2
+end
+
+p double(1000000000)
+# => 2000000000
+
+p double(3000000000)
+# => Error in: no overload matches 'double' with type Int64
+```
+
+そのため，Crystalではユニオン型として固定長整数型であればどの型の値でもOKな_Int::Primitive_や，すべての符号つき固定長整数型（_Int8_，_Int16_，_Int32_，_Int64_）を含む_Int::Signed_，すべての符号なし固定長整数型（_UInt8_，_UInt16_，_UInt32_，_UInt64_）を含む_Int::Unsigned_が用意されています。また，固定長整数型はすべて_Int_を継承してるので，_Int::Primitive_の代わりに_Int_を使うこともできます。
+
+```crystal
+def double(i : Int)
+  i * 2
+end
+
+p double(1000000000)
+# => 2000000000
+
+p double(3000000000)
+# => 6000000000
+```
+
+## テキスト
+
+### シングルクォート（`'`）で囲んだリテラルは_Char_型
+
+```crystal
+p "string"
+# => "string"
+
+p 'string'
+# => Syntax error: unterminated char literal, use double quotes for strings
+```
+
+Crystalには，文字列を扱う_String_型に加えて単一文字を扱う_Char_型が用意されており，ダブルクォート（`"`）で囲んだ文字は_String_リテラル，シングルクォート（`'`）で囲んだ文字は_Char_リテラルになります。そのため，`'`で複数文字を囲んだ記述をすると上記のようなエラーが発生します。
+
+### 内部はUTF-8エンコーディング
+
+以前はマルチバイト文字にUTF-8エンコーディングしか使用できなかったCrystalにも，0.12.0からマルチエンコーディングがサポートされるようになりました。
+
+ただし，Rubyのマルチエンコーディング対応がCIS（Code Set Independent）方式なのに対して，CrystalはどうやらUTF-8によるUCS（Universal Character Set） Normalization方式を採用しているようです。
+
+つまり，Rubyでは_String_オブジェクトはそれ自信が文字列のエンコーディング情報を持ち，オブジェクト内部にはそのエンコーディングのままバイト列を保持しているのに対し，Crystalの場合は_String_オブジェクトはあくまでUTF-8エンコーディングのバイト列だけを保持する作りになっており，別エンコーディングの文字列を扱う際には入出力時に必要なエンコーディングへ変換するような動きをします。
+
+例えば，`sjis.txt`と言うファイルにShift_JISでエンコードされた`日本語`というテキストが保存されているとしましょう。このとき，Rubyでその内容を文字列に取り込んで，`String#bytes`を実行するとShift_JISエンコーディングのバイト列が得られます。
+
+```crystal
+# Rubyの場合
+sjis = File.open("sjis.txt", "r:Shift_JIS").read
+p sjis.bytes
+# => [147, 250, 150, 123, 140, 234]
+```
+
+一方，同じフィアルをCrystalで読み込んで同じようにバイト列を取得すると，得られるのはUTF-8エンコーディングでのバイト列になります。
+
+```crystal
+# Crystalの場合
+sjis = File.read("sjis.txt", "Shift_JIS")
+p sjis.bytes
+# => [230, 151, 165, 230, 156, 172, 232, 170, 158]
+```
+
+もし，Shift_JISコードのバイト列が必要な場合は，`String#encode`メソッドを使用する必要があります。この時，返り値が_Array(UInt8)_型ではなく_Slice(UInt8)_型なので注意してください。
+
+```crystal
+sjis = File.read("sjis.txt", "Shift_JIS")
+p sjis.encode("Shift_JIS")
+# => Slice[147, 250, 150, 123, 140, 234]
+```
+
+Crystalでも，入出力の際に_IO_側へエンコーディングを指定しておけば，そちらでコード変換を行ってくれますので，_String_オブジェクトの内部データがクリティカルに影響する場面は少ないと思いますが，意識の隅に置いておくと良いかもしれません。
+
+なお，単一文字を扱う_Char_型も，_String_と同じくUTF-8の１文字を扱います。ですので，C言語の_char_型とは違いデータサイズは１バイトとは限りません。
+
+## シンボル
+
+### 動的にシンボルを生成できない
+
+CrystalでもRubyと同様にシンボル型（_Symbol_）が存在します。ハッシュキーなど利用シーンもほぼRubyと変わりませんが，１つだけ，文字列から動的にSymbolオブジェクトを生成できない，という違いがあります。
+
+Rubyの場合，`String#intern`メソッドによって，_String_オブジェクトから新しい_Symbol_オブジェクトを動的に生成できますが，Crystalではコンパイル時に各シンボルにユニークな番号（_Int32_型）を振って，プログラム中での取り扱いを整数処理に置き換えてしまう[^symbol]そうで，コンパイル後に新しいシンボルを追加することはできません。
+
+```crystal
+symbol = "symbol".intern
+p symbol
+# Ruby    => :symbol
+# Crystal => Error: undefined method 'intern' for String
+```
+
+[^symbol]: <q>You can't dynamically create symbols. When you compile your program, each symbol gets assigned a unique number.</q>【参照】<http://crystal-lang.org/api/Symbol.html>
+
+## 配列
+
+### 初期化時に指定した型の値しか使えない
+
+Crystalの配列がRubyのものと異なる一番大きなポイントは，_要素の型_ に制限がかかることです。そのため，Crystalの配列は _要素の型_ ごとに_Array(Int32)_や，_Array(String)_といった表現をし，厳密には異なる型として扱われます。
+
+もしCrystalの配列オブジェクトに対して，`Array#[]=`や`Array#<<`メソッドによって，_要素の型_ に適合しないオブジェクトを放り込もうとするとエラーになります。
+
+```crystal
+arr = [0, 1, 2]
+arr << "a"
+# => Error: no overload matches 'Array(Int32)#<<' with type String
+```
+
+実は配列の初期化時にはそれぞれ異なる型のオブジェクトを複数含めることができます。こうした場合，Crystalのコンパイラはこの配列の _要素の型_ が，初期化時に与えられたすべてのオブジェクトの型のユニオン型（ユニオン型については後述）だと判断し，それらの合成元の型のオブジェクトはすべて扱えるようになります。
+
+```crystal
+# Int32型とString型を含む配列
+arr = [0, "a"]
+
+p typeof(arr)    # => Array(Int32 | String)
+p arr << 1       # => [0, "a", 1]
+p arr << "b"     # => [0, "a", 1, "b"]
+
+# Char型は初期化時に与えられていないのでNG
+p arr << 'c'
+# => Error: no overload matches 'Array(Int32 | String)#<<' with type Char
+```
+
+この場合，配列の各要素はユニオン型（上記の例だと_(Int32 | String)_）のオブジェクトとして扱われますので，その時の値の型固有のメソッドを使用するためには，何らかの方法で型を特定する必要があります。
+
+```crystal
+# Int32型とString型を含む配列
+arr = [0, "a"]
+
+# 値は”a”でも変数の型は(Int32 | String)
+a = arr[1]
+
+# そのままString型固有のメソッドを使用するとエラー
+p a.size
+# => Error: undefined method 'size' for Int32 (compile-time type is (Int32 | String))
+
+# #is_a? メソッドなどで型を特定してやると使える
+if a.is_a?(String)
+  p a.size
+  # => 1
+end
+```
+
+### 初期化時に _要素の型_ を特定できないとNG
+
+```crystal
+# 型指定のない空配列は作れない
+arr = []
+# => Syntax error: for empty arrays use '[] of ElementType'
+```
+
+_要素の型_ をコンパイラに伝える方法の１つは，上でも紹介した初期化時に値を与える方法です。Crystalのコンパイラが，初期値として与えられているオブジェクトの型から _要素の型_ を推測してくれます。空の配列を初期化する場合も型の指定が必要で，そのために`Array(要素の型).new`メソッドを使って初期化する方法と，型を指定するリテラル形式`[] of 要素の型`で初期化するという2種類の方法が用意されています。
+
+```crystal
+# どちらも空のArray(Int32)オブジェクトで初期化される
+arr = Array(Int32).new
+arr = [] of Int32
+```
+
+### 存在しない要素の取得がエラーになる
+
+```crystal
+arr = [0,1]
+p arr[2]
+# Ruby    => nil
+# Crystal => Index out of bounds (IndexError)
+```
+
+`Array#[](index : Int)`で存在しないインデックスを指定した場合，Rubyだと`nil`が返されますが，Crystalだと_IndexError_になります。これは，空の配列に対して`Array#first`や`Array#last`，`Array#pop`，`Array#shift`などを呼び出した場合も同様です。
+
+その代わり，これらのメソッドにはRubyと同じ挙動のクエスチョン付きのメソッド `Array#[]?(index : Int)`や`Array#first?`や`Array#last?`，`Array#pop?`，`Array#shift?`などが用意されています。
+
+```crystal
+arr = [0,1]
+p arr[2]?
+# => nil
+```
+
+なぜこのような挙動になっているかというと，理由はCrystalのユニオン型の挙動にあります。
+
+上の方でも触れましたが，メソッドが複数の型の値を返す可能性がある場合，Crystalコンパイラはメソッドの返り値を返される可能性のあるすべての型のユニオン型として認識します。ということは，`#[]`などのメソッドが，存在しない要素への参照に`nil`を返す仕様だったとすると，その返り値は _要素の型_ と_Nil_型のユニオン型になります。そして，ユニオン型として認識されているオブジェクトは合成元の型が共通して持っているメソッドしか使用できません。
+
+その結果どうなるかというと，要素の型に固有のメソッドを使おうとするたびに，毎回`#not_nil!`メソッドやその他の方法で値が存在することを確定させなけれなならなくなります。
+
+```crystal
+# 仮定：もし #[] がnilも返す仕様だった場合
+
+a = ["foo","baa"]
+
+p a[0].upcase
+# => Error: undefined method 'upcase' for Nil (compile-time type is String?)
+
+p a[0].not_nil!.upcase
+# => "FOO"
+```
+
+要素が存在しない可能性を考慮する場合にメソッド名に`?`をつけるコストと，取得した要素を使用するたびに値が存在することを確定させるコストを比較した結果，後者よりも前者の方が負担が少ない，と判断されたようです。（私もそう思います）
+
+### 配列っぽいオブジェクトその1：スライス（_Slice_）
+
+スライス（_Slice_型）は配列のように複数の要素を含むことができインデックス番号の指定で特定の要素を取得することができるコンテナ系オブジェクトで，配列のように _要素の型_ がありそれぞれ_Slice(String)_や_Slice(Int32)_などと表現されます。
+
+スライスにはリテラルが存在しませんが初期化用の専用構文`Slice[]`が用意されています。また，`Slice.new`には多くの引数のパターンが用意されており，こちらを使ってスライスオブジェクトを作成することもできます。
+
+```crystal
+# 専用構文を使用した初期化
+p Slice["a", "b", "c"]
+# => Slice["a", "b", "c"]
+
+# 要素数と初期値を指定して初期化
+p Slice.new(2, "a")
+# => Slice["a", "a"]
+
+# 要素の型がプリミティブであれば要素数のみでも初期化可能（各値はゼロ初期化）
+p Slice(UInt32).new(3)
+# => Slice[0, 0, 0]
+
+# プリミティブな型でないとエラーになるので注意
+p Slice(String).new(3)
+# => Invalid memory access (signal 11) at address 0xc
+```
+
+一見，スライスはサイズが固定の配列の配列のように見えます。`#[]`メソッドにインデックスを指定して値を取り出したり，`#[]=`メソッドで値を更新したりできるほか，やはり_Enumerable_や_Iterable_をmix−inしているので，`#each`，`#join`，`#map`など，_Array_でおなじみのメソッドを使用することもできるのも配列と同様です。
+
+大きな違いはこの項の冒頭にも書いた通り，初期化時に決定したサイズを変更できないことです。そのため`#<<`メソッドはありませんし，`#push`，`#pop`，`#shift`，`#unshift`など使用後に自信のサイズが変化するメソッドも使用できません。`#[]`でに存在しないインデックスを指定するとエラーになるのは配列と同じですが，`#[]?`は用意されていません。
+
+配列とスライスで共通のインスタンスメソッドがある場合，大抵は同じような動作をしますが`#+`だけは大きく異なるので注意が必要です。`Array#+`は他の_Array_オブジェクトを引数（右辺）にとり，自信とその配列を結合した新しい配列を返します。これに対して`Slice#+`は整数値を引数（右辺）にとり，自信の先頭を数値分ずらした新しいスライスを返します。
+
+```crystal
+# Array#+ は連結
+p [1,2] + ["3", "4"]
+# => [1, 2, "3", "4"]
+
+# Slice#+ はオフセット操作
+p Slice[1,2,3,4] + 2
+# => Slice[3, 4]
+```
+
+### 配列っぽいオブジェクトその2：タプル（_Tuple_）
+
+タプル（_Tuple_型）も配列のように複数の要素を含むことができ，インデックス番号の指定で特定の要素を取得することができるコンテナ系オブジェクトです。タプルには初期化に使えるリテラルが用意されています。
+
+```crystal
+# タプルリテラル
+tuple = {1, "a", 1.0}
+```
+
+配列と比べたとき，タプルには２つの大きな特徴があります。
+
+ひとつはサイズ変更だけでなく初期化後は要素の更新が一切できない，俗に言うイミュータブル（immutable）なオブジェクトであることです。イミュータブルであるため`#[]=`をはじめとした状態を変更するメソッドは利用できません。
+
+そしてもうひとつ，タプル最大の特徴は何番目の要素が何型のオブジェクトであるかを知っていることです。そのため，実際に利用されるタプルオブジェクトの型は，正式には要素の型のリストをつけた_Tuple(Int32, String, Float64)_（上記コード中のタプルオブジェクトの場合）という表現になります。また，という形式でタプルの型を表現することもです。また，型を指定する場面では，タプルリテラルの要素を型に置き換えた_{Int32, String, Float64}_という短縮表現を利用することもできます。ただし，この短縮表現は型を指定する以外の場所で使用した場合，値に`Int32`と`String`，`Float64`を含んだタプルオブジェクトのリテラルとして解釈されます。
+
+配列やスライスの場合，複数の要素がそれぞれ異なる型のオブジェクトだった場合，配列やスライス全体の _要素の型_ がユニオン型になります。しかし，タプルの場合は何番目の要素が何型のオブジェクトなのかがわかっているので，個々の要素を取り出した場合に，そのまま元の型のオブジェクトとして扱うことができます。
+
+```crystal
+arr = [1, "a"]
+p typeof(arr[0])
+# => (Int32 | String)
+p typeof(arr[1])
+# => (Int32 | String)
+
+tuple = {1, "a"}
+p typeof(tuple[0])
+# => Int32
+p typeof(tuple[1])
+# => String
+```
+
+この特徴はメソッドから複数の値を返したいときに大活躍します。
+
+```crystal
+# 異なる型の値をタプルで返す
+def tuple(s : String)
+  {s.size, s.upcase}
+end
+
+# 返り値を多重代入可能
+s, u = tuple("tuple")
+
+# それぞれが元の型のオブジェクトになる
+p typeof(s)
+# => Int32
+p typeof(u)
+# => String
+
+# それぞれの型固有のメソッドを直接使える
+p s.odd?
+# => true
+p u.chars
+# => ['T', 'U', 'P', 'L', 'E']
+```
+
+同じことを配列で行うと返り値を多重代入した変数がすべてユニオン型のオブジェクトとして認識されてしまい非常に面倒なことになります。
+
+```crystal
+# 異なる型の値を配列で返す
+def array(s : String)
+  [s.size, s.upcase]
+end
+
+# 配列でも多重代入は可能
+s, u = array("array")
+
+# ただし，すべてユニオン型のオブジェクトになる
+p typeof(s)
+# => (Int32 | String)
+p typeof(u)
+# => (Int32 | String)
+
+# 元の型に固有のメソッドを直接使えない
+p s.odd?
+# => Error: undefined method 'odd?' for String (compile-time type is (Int32 | String))
+```
+
+また，タプルはスプラット（`*`）と組み合わせてメソッド引数の受け渡しに使用することができます。CrystalでもRubyと同じように，メソッド定義の引数名の前に`*`をつけることで任意の数の値を受け取ることができますが，この際`*`つきで定義された引数をメソッド内で使用する場合の型はCrystalではタプルになります（Rubyでは配列でした）。
+
+```crystal
+def foo(*arg)
+  arg
+end
+
+p foo(1, 2.0, "3", '4')
+# => {1, 2.0, "3", '4'}
+```
+
+逆に，複数の引数を受け取るメソッドに対して，対応する値を要素にもつタプルを`*`付きで渡して呼び出すこともできます。
+
+```crystal
+def bar(a : String, b : Int32)
+  a * b
+end
+
+tpl = {"abc", 2}
+p bar(*tpl)
+# => "abcabc"
+```
+
+その他，`case`文のマッチ条件に使用されたり[^tplcase]と，タプルはかなり奥の深いオブジェクトです。
+
+[^tplcase]: 【参照】<http://crystal-lang.org/docs/syntax_and_semantics/case.html>
+
+## ハッシュ
+
+Rubyとの比較でいえば，Crystalのハッシュも前述した配列と同じような特徴を持っています。
+
+### 初期化時に指定した型のキーと値しか扱えない
+
+配列における _要素の型_ と同様に，Crystalのハッシュは _キーの型_ と _値の型_ を持っていて，それぞれの型に合致するオブジェクトしか扱えません。ハッシュの型は，_キーの型_ と と _値の型_ の組み合わせごとに_Hash(キーの型, 値の型)_という表記をし，それぞれが厳密には異なる型として扱われます。
+
+```crystal
+hash = {"a" => 1, "b" => 2}
+p typeof(hash)
+# => Hash(String, Int32)
+
+# キーの型が違う
+hash[:c] = 1
+# => Error: no overload matches 'Hash(String, Int32)#[]=' with types Symbol, Int32
+
+# 値の方が違う
+hash["c"] = 3.0
+# => Error: no overload matches 'Hash(String, Int32)#[]=' with types String, Float64
+```
+
+初期化時のキーや値に複数の型のオブジェクトが含まれていると，_キーの型_ や _値の型_ がユニオン型になるのも配列とよく似ています。
+
+```crystal
+hash = {"a" => 1, 'b' => 2.0}
+
+p typeof(hash)
+# => Hash(Char | String, Float64 | Int32)
+```
+
+ユニオン型の値は取り扱いが面倒ですので，Rubyなどでたまに見かけるハッシュに様々な値を放り込んで，状態だけを保持できる汎用の簡易オブジェクトとして使用する手法は，Crystalには向いていないように思います。もし初期化後に状態の更新を伴わないのであれば，後述する名前付きタプルが利用できますし，状態を更新する必要があるのであれば，そのデータ用の型を定義するべきでしょう。
+
+### 初期化時に _キーの型_ や _値の型_ が特定できないとNG
+
+```crystal
+# キーや値の型指定がない空ハッシュは作れない
+hash = {}
+# => Syntax error: for empty hashes use '{} of KeyType => ValueType'
+```
+
+_キーの型_ や _値の型_ をコンパイラに伝える方法の１つは，上でも紹介した初期化時に値を与える方法です。Crystalのコンパイラが，初期値として与えられているオブジェクトの型から  _キーの型_ と _値の型_ を推測してくれます。空のハッシュを初期化する場合も型の指定が必要で，そのために`Hash(キーの型, 値の型).new`メソッドを使って初期化する方法と，型を指定するリテラル形式`{} of キーの型 => 値の型`で初期化するという2種類の方法が用意されています。
+
+```crystal
+# どちらも空のHash(String, Int32)オブジェクトで初期化される
+hash = Hash(String, Int32).new
+hash = {} of String => Int32
+```
+
+### 存在しないキーへのアクセスはエラーになる
+
+これも配列と同様，`#[]`に存在しないキーを指定するとエラーが発生します。やはり，キーが存在しない場合に`nil`を返す`#[]?`が用意されています。
+
+```crystal
+hash = {"a" => 1, "b" => 2}
+
+p hash["c"]
+# => Missing hash key: "c" (KeyError)
+
+p hash["c"]?
+# => nil
+```
+
+ただし，`||=`を利用して指定したキーが存在しない場合にのみ値を代入する `hash[key] ||= value` という構文は，コンパイラによって以下のように展開されるため，エラーにならずこれまでどおり利用可能です。
+
+```crystal
+hash[key] ||= value
+# ↑は↓に展開される
+unless hash[key]?
+  hash[key] = value
+end
+```
+
+### `{symbol: value}`形式のリテラルはハッシュではない
+
+Rubyに1.9系から実装されたシンボルをキーとするハッシュの`{symbol: value}`形式の表現は，Crystal 0.17.0以降ではハッシュではなく後述する名前付きタプル（_NamedTuple_型）のリテラルになりました。
+
+0.17.0以降のCrystalではシンボルをキーとするハッシュも標準的な`{:symbol => value}`形式のリテラルを使用する必要があります。
+
+```crystal
+# これは名前付きタプル
+ntpl = {a: 1, b: 2}
+
+# ハッシュはこう
+hash = {:a => 1, :b => 2}
+```
+
+名前付きタプルは初期化後に更新ができませんので，ハッシュのつもりで名前付きタプルを作ってしまうと，状態を更新しようとした際にエラーに遭遇することになります。このときのエラーメッセージは，`{symbol: value}`形式をハッシュのリテラルだと思っていると，実際にはハッシュとは異なる型になってしまっていることが微妙に分かりにくいため注意が必要です。
+
+```crystal
+# 上記コードの続き
+ntpl[:c] = 3
+# => Error: undefined method '[]=' for {a: Int32, b: Int32}
+```
+
+
+### ハッシュっぽいオブジェクト：名前付きタプル（_NamedTuple_）
+
+前項でちらっと登場した名前付きタプル（_NamedTuple_）は，ハッシュと同様にキーとそのキーに対応した値を持つコンテナ系オブジェクトですが，名前付きタプルのキーに必ずシンボルになります。また，先ほども触れたとおり，名前付きタプルには初期化に使えるリテラルが用意されています。
+
+```crystal
+ntpl = {a: 1, b: "a"}
+```
+
+名前付きタプルは初期化後に状態を変更できない点や，各キーに対応する値の型情報を保持している点など，機能面から見たハッシュと名前付きタプルの関係は，配列とタプルの関係によく似ています。
+
+```crystal
+# 上記コードの続き
+p typeof(ntpl[:a])
+# => Int32
+p typeof(ntpl[:b])
+# => String
+```
+
+実際に利用される名前付きタプルオブジェクトの型は，正式にはキーとその値の型を含んだ_NamedTuple(a: Int32, b: String)_（上記コード中の名前付きタプルオブジェクトの場合）という表現になります。また，型を指定する場面では，名前付きタプルリテラルの値を型に置き換えた_{a: Int32, b: String}_という短縮表現を利用することもできます。ただし，この短縮表現は型を指定する以外の場所で使用した場合，キー`:a`に対して値に`Int32`を，キー`:b`に対して値`Strng`を持つ名前付きタプルオブジェクトのリテラルとして解釈されます。
+
+値として複数の型のオブジェクトを含む場合に取り出した値がユニオン型だと見なされるハッシュと異なり，各キーの値がどの型なのかが分かっているので，名前付きタプルから取り出した値は元の型のオブジェクトとしてそのまま使用できます。
+
+```crystal
+# さらに続き
+p ntpl[:b].upcase
+# => "A"
+```
+
+また，名前付きタプルはスプラット2つ（`**`）と組み合わせることで，メソッド引数の受け渡しに使用することができます。
+
+CrystalでもRubyでも，メソッド定義時に`**`を先頭につけた引数を設定すると，メソッド呼び出し時に任意のキーワード引数を渡せるようになります。Crystalでは，このとき`**`付きで設定された引数はメソッド内では名前付きタプルとなります（Rubyではハッシュが渡されます）。
+
+```crystal
+def foo(**arg)
+  arg
+end
+
+p foo(a: "abc", b: 2)
+# => {a: "abc", b: 2}
+```
+
+逆に，メソッドに対して名前付きタプルを`**`付きで引数として与えることで，タプルの内容を引数リストに展開してメソッドを呼び出すことができます。
+
+```crystal
+def bar(a : String, b : Int32)
+  a * b  
+end
+
+p bar(a: "abc", b: 2)
+# => "abcabc"
+```
+
+普通の（名前付きでない）タプルでもできるじゃないか，と思われるかもしれませんが，名前付きタプルを利用する場合，デフォルト値が設定されている任意の引数を省略できる点が異なります。タプルの場合は要素の順番が，引数の順番と対応しているため，タプルの要素数が引数定義より少ない場合は，先頭から要素の数分の引数が指定されたものと見なされ，途中の引数を省略することができません。
+
+```crystal
+# デフォルト値が指定された引数を持つメソッド
+def buz(a : String = "abc", b : Int32 = 2 , c : Bool = false)
+  d =  a * b
+  c ? d.upcase : d
+end
+
+# 名前付きタプルなら途中の引数でも省略して実行可能
+ntpl = {a: "xyz", c: true}
+p buz(**ntpl)
+# => "XYZXYZ"
+
+# タプルだと途中の引数を省略できない
+tpl = {"xyz", true}
+p buz(*tpl)
+# => Error: no overload matches 'buz' with types String, Bool
+```
+
+## クラス定義関係
+
+### `attr_*`がない
+
+インスタンス変数へのアクセサメソッドを定義してくれる`attr_reader`, `attr_writer`, `attr_accessor`構文はCrystalには存在しません。その代わり，それぞれに対応した`getter`，`setter`，`property`というアクセサマクロが用意されています。使い方はRubyの`attr_*`とほぼ同じですが，インスタンス変数の指定方法が複数用意されています。
+
+```crystal
+# Rubyの場合
+attr_reader :foo
+
+# Crystalの場合（いずれも同じ結果）
+getter :foo
+getter @foo
+getter foo
+```
+
+### `#initialize`中で初期化されないインスタンス変数は nilable になる
+
+初期化されないと存在しないものと見なされるローカル変数と異なり，インスタンス変数は未定義であっても使用することができ，そのときの値は `nil` になります。そのため`#initialize`中で初期化されなかったインスタンス変数は`nil`の状態がありうる（nilable な）値だとコンパイラに認識されます。
+
+前述したとおり，インスタンス変数はクラス定義の中で型が特定される必要があります。例えば，_Int32_型だと宣言したインスタンス変数が`#initialize`中で初期化されなかった場合，_Int32_型は`nil`という値を許容しないためコンパイルエラーになります。この際，明示的に `nil`を値として持てる型（_Int32?_型など）として宣言されていればエラーは起こりません。未定義の状態を`nil`として扱うインスタンス変数は，_Nil_型とのユニオン型として宣言しておきましょう。
+
+```crystal
+class Foo
+  @bar : Int32
+end
+
+foo = Foo.new
+# => Error: instance variable '@bar' of Foo was not initialized in all of the 'initialize' methods, rendering it nilable
+```
+
+### `to_s`のオーバーライドが反映されないように見える
+
+Crystalにも，Rubyと同じくオブジェクトの文字列表現を返す`#to_s`メソッドが用意されており，暗黙の文字列変換が必要な場合には`#to_s`メソッドが返すのと同じ文字列が使用されます。また，何かのクラスを継承しない独自クラスを定義した場合，デフォルトの`#to_s`は型名とオブジェクトIDから自動生成された文字列を返します。
+
+```crystal
+class Foo
+end
+
+foo = Foo.new
+p foo.to_s
+# => "#<Foo:0x10f3d5fd0>"
+puts foo
+# => #<Foo:0x10f3d5fd0>
+```
+
+さて，この_Foo_型のオブジェクトに独自の文字列表現を持たせようとして，Rubyでの作法通りに引数なしの`#to_s`をオーバーライドしたとしても望んだような結果にはなりません。`Foo#to_s`メソッドは確かにオーバーライドした結果の文字列を返すのですが，`puts`や文字列リテラル中の暗黙の文字列変換時には元の文字列表現が使用されてしまいます。
+
+```crystal
+class Foo
+  def to_s
+    "This is Foo!"
+  end
+end
+
+foo = Foo.new
+p foo.to_s
+# => "This is Foo!"
+puts foo
+# => #<Foo:0x10965cfd0>
+```
+
+こうした場合Crystalでは，引数なしの`#to_s`ではなく，引数に_IO_オブジェクトを取る`#to_s(io : IO)`をオーバーライドし，引数で与えられた_IO_オブジェクトに対して文字列を追加（出力）するような処理を記述します[^to_s]。
+
+[^to_s]: <q>Descendants must usually not override this method. Instead, they must override #to_s(io), which must append to the given IO object.</q>【参照】<http://crystal-lang.org/api/Object.html#to_s-instance-method>
+
+```crystal
+class Foo
+  def to_s(io : IO)
+    io << "This is Foo!"
+  end
+end
+
+foo = Foo.new
+p foo.to_s
+# => "This is Foo!"
+puts foo
+# => This is Foo!
+```
+
+## その他
+
+### `Object#class`の返り値をクラスオブジェクトとして使えない場面がある
+
+Crystalにも，Rubyと同じようにあるオブジェクトのクラスを返す`Object#class`メソッドが用意されています。Crystalでも`Object#class`の返り値をレシーバにしてクラスメソッドを呼び出したりできますが，Rubyだと問題ないのにCrystalだとエラーになる構文があります。
+
+```crystal
+# Rubyの場合
+class Foo
+  BAA = 1
+end
+
+foo = Foo.new
+class_of_foo = foo.class
+
+# クラスメソッドのレシバーになれる
+bar = class_of_foo.new
+
+# #is_a? の引数に指定できる
+p bar.is_a?(class_of_foo)
+# => true
+
+# クラス定数を参照できる
+p class_of_foo::BAA
+# => 1
+```
+
+Crystalでは，上記コードのような`#class`の利用はどちらもエラーになります。
+
+```crystal
+# Crystalの場合
+class Foo
+  BAA = 1
+end
+
+foo = Foo.new
+class_of_foo = foo.class
+
+# クラスメソッドのレシバーにはなれる
+bar = class_of_foo.new
+
+# #is_a? の引数には指定できない
+p bar.is_a?(class_of_foo)
+# => Syntax error: expecting token 'CONST', not 'class_of_foo'
+#    p bar.is_a?(class_of_foo)
+#                ^
+
+# クラス定数も参照できない
+p class_of_foo::BAA
+# => Syntax error: unexpected token: ::
+#    p class_of_foo::BAA
+#                  ^
+
+```
+
+エラーメッセージを見る限り，両方とも構文解析上の問題みたいですね。
+
+前者については，さしあたりクラスメソッドのレシーバになれるので，クラス定数の値を返すクラスメソッドを用意すればなんとかなりそう。後者についても`bar.class == class_of_foo`という形で同じクラスかどうかの判定はできますが，この方法はユニオン型のオブジェクトに対して型を特定するための条件としては機能しないようで，完全な代替にはならなさそうな感じです。
+
+```crystal
+class Foo
+  def buz
+    "buz"
+  end
+end
+
+arr = [Foo.new]
+
+foo = Foo.new
+bar = arr.first?
+
+if bar.class == foo.class
+  # コンパイラはbarがFoo(foo.class)型であるとは認識できない
+  p bar.buz
+  # => Error: undefined method 'buz' for Nil (compile-time type is Foo?)
+end
+```
+
+
+## 最後に
+
+というわけで，超利用者視点でRuby経験者がCrystalを触ってみて「おっ？」と思った内容心にまとめてみました。
+
+世界中のWebサイトにCrystalを触ってみようとするRubyistに向けたドキュメントがいくつも公開されていますので，そうしたドキュメントを参考にされるとCrystalの世界を感覚的に理解する助けになるのではないでしょうか。
+
+- [Crystal for Rubyists](https://github.com/crystal-lang/crystal/wiki/Crystal-for-Rubyists)（英語）
+
+    GitHub上のCrystal公式リポジトリ付属のWikiページ
+
+- [Crystal for Rubyists](http://www.crystalforrubyists.com)（英語）
+
+    Crystal製のShinatraライクなWebフレームワークKemal[^kemal]の作者としても知られるSerdar Dogruyolさん[^serdar]によるコンテンツ
+
+- [Ruby脳にはCrystalつらい Advent Calendar 2015](http://qiita.com/advent-calendar/2015/crystal-for-rubyist)
+
+    tmtmさん[^tmtm]による2015年のアドベントカレンダー企画
+
+
+[^kemal]: 【参照】<http://kemalcr.com>
+[^serdar]: 【参照】<https://github.com/sdogruyol>
+[^tmtm]: 【参照】<https://github.com/tmtm>
+---
