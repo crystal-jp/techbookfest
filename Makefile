@@ -4,9 +4,9 @@ CRYSTAL = crystal
 PANDOC_FILTER = build/pandoc_filter
 
 PANDOC_OPT  = \
-	--latex-engine=lualatex                \
-	-V documentclass=ltjsbook              \
-	--number-sections --toc                \
+	--latex-engine=lualatex               \
+	-V documentclass=ltjsbook             \
+	--number-sections --toc --toc-depth=2 \
 	--chapters
 CRYSTAL_OPT = --release
 
