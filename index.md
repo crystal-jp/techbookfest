@@ -1,4 +1,4 @@
 ---
 title: crystalの本
-author: ccrystal-jp
+author: crystal-jp
 ---
