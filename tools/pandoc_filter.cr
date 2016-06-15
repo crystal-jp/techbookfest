@@ -34,15 +34,15 @@ json = walk(json) do |hash|
   next hash unless t = hash["t"]?.try &.as? String
   next hash unless t == "Link"
   next hash unless c = hash["c"]?.try &.as? Array(JSON::Type)
+  next hash unless url = c[2].as?(Array(JSON::Type)).try &.[0].as?(String)
   next hash unless c1 = c[1].as? Array(JSON::Type)
-  next hash unless c1.size == 1
-  next hash unless str = c1[0].as?(Hash(String, JSON::Type))
-  next hash unless str["t"].as?(String) == "Str"
-  next hash unless url1 = str["c"].as?(String)
-  next hash unless url2 = c[2].as?(Array(JSON::Type)).try &.[0].as?(String)
-  next hash if url1 == url2
+  next hash if c1.size == 1 &&
+               (str = c1[0].as?(Hash(String, JSON::Type))) &&
+               str["t"].as?(String) == "Str"               &&
+               (str = str["c"].as?(String))                &&
+               str == url
 
-  c1.push(ast("Note", [ast("Para", [ast("Link", [c[0], [ast("Str", url2)] of JSON::Type, c[2]] of JSON::Type)])]))
+  c1.push(ast("Note", [ast("Para", [ast("Link", [c[0], [ast("Str", url)] of JSON::Type, c[2]] of JSON::Type)])]))
   c1
 end
 
