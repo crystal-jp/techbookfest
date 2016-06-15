@@ -27,5 +27,4 @@ build/:
 
 .PHONY: clean
 clean:
-	rm techbookfest.pdf
-	rm tools/pandoc_filter
+	rm -rf build/
