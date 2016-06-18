@@ -24,8 +24,12 @@ crystal build --release http_sample.cr
 ```
 
 もっと複雑なWebアプリを作成したい場合は、役立つフレームワークが幾つか有志の手で作られております。
-以前第3回Crystal勉強会で紹介させていただいたFrost（※1）や、同勉強会で@pine613さんが紹介されたKemal（※2）などが代表的ですが、他の情報については「Awesome Crystal」（※3）で取り上げられているので本稿では割愛します。
+以前第3回Crystal勉強会で紹介させていただいたFrost[^1]や、同勉強会で@pine613さんが紹介されたKemal[^2]などが代表的ですが、他の情報については「Awesome Crystal」[^3]で取り上げられているので本稿では割愛します。
 本稿ではKemalを主に例として挙げ、Crystalでのミニブログ機能を持つWebアプリの制作方法を簡単に紹介します。
+
+[^1]: Frost https://github.com/ysbaddaden/frost
+[^2]: @pine613さんが紹介されたKemal https://speakerdeck.com/pine613/crystal-teshi-ji-falseuehusahisuhazuo-rerufalseka
+[^3]: Awesome Crystal https://github.com/veelenga/awesome-crystal
 
 尚、本章でのサンプルはCrystal ver0.17.4で確認しております。
 また、説明に使用したサンプルは以下に格納しております。
@@ -621,14 +625,3 @@ git push heroku master
 ```
 
 デプロイ後に`https://kemal-sample-160601.herokuapp.com/`にアクセスすると、エラーが表示されなく、かつ　`/articles/new`からデータが追加できれば成功です。
-
-## 脚注
-
-- （※1）Frost
-    - https://github.com/ysbaddaden/frost
-    - また同勉強会で紹介した資料はこちら
-    - http://www.slideshare.net/etmnk/crystalrails
-- （※2）@pine613さんが紹介されたKemal
-    - https://speakerdeck.com/pine613/crystal-teshi-ji-falseuehusahisuhazuo-rerufalseka
-- （※3）Awesome Crystal
-    - https://github.com/veelenga/awesome-crystal
