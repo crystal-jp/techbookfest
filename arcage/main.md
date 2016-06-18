@@ -1195,6 +1195,10 @@ puts foo
 
 ## その他
 
+### 同機能のメソッドが集約されている
+
+Ruby の `String` クラスには，`#size` と `#length` というメソッドがありますが，どちらも返すのは文字列の文字数です。Crystal の `String` 型には `#length` がなく `#size` だけが残っています。このほか,`Enumerable` の `#map` と `#collect` が `#map` だけになっていたりと，Ruby で同じ機能のメソッドが複数用意されている場合，Crystal ではその多くが１つのメソッドに集約されています。
+
 ### `Object#class` の返り値をクラスオブジェクトとして使えない場面がある
 
 Crystal にも，Ruby と同じようにあるオブジェクトのクラスを返す `Object#class` メソッドが用意されています（構造体の場合でもメソッド名は `#class` です）。Crystal でも `Object#class` の返り値をレシーバにしてクラスメソッドを呼び出したりできますが，Ruby の場合と全く同じように使えるわけではないようです。例えば，Ruby だと問題のない以下のようなコードも，Crystal ではエラーになります。
@@ -1206,8 +1210,6 @@ end
 
 foo = Foo.new
 class_of_foo = foo.class
-
-# クラスメソッドのレシバーにはなれる
 bar = class_of_foo.new
 
 # #is_a? の引数には指定できない
