@@ -120,26 +120,25 @@
   ~ バージョン0.12.0がリリースされた。
   ~ 東京Crystal勉強会の第3回が開催された。
   ~ 5t111111さんがCodeIQで自身の発表と様子をレポートした。
-  ~ The Changelogにaryさんとwajさんが招待されトークを行った。
-  ~ sdogruyolさんがProgGunlenでkemalの紹介をした。
+  ~ The Changelogに[aryさんとwajさんが招待されトーク](https://changelog.com/192/)を行った。
+  ~ sdogruyolさんが[ProgGunlenでkemalの紹介](http://slides.com/sdogruyol/crystal-2)をした。
   ~ アルゼンチンで初のCrystal Meetupが開催された。
 
 3月
   ~ バージョン0.13.0、0.14.0がリリースされた。playgroundが梱包され、変数のタイプがどう推定されているか追跡できるようになった。
-  ~ YouTubeでCrystallanguage Hangout質疑をユーザとAry さんが会話。
-  ~ sdogruyolさんがViennaRBでKemalを紹介した。
-  ~ pine613さんが歌舞伎座Tech「異種プログラミング言語格闘勉強会」でCrystalを紹介した。
+  ~ sdogruyolさんが[ViennaRBでKemalを紹介](http://slides.com/sdogruyol/building-web-apps-with-kemal)した。
+  ~ pine613さんが[歌舞伎座Tech「異種プログラミング言語格闘勉強会」でCrystalを紹介](https://speakerdeck.com/pine613/crystal-yan-yu-falseshao-jie-ge-wu-ji-zuo-dot-tech-number-9)した。
   ~ vagmiさんがRubyConf India 2016で紹介した。
 
 4月
-  ~ aryさんが恒例のエイプリルフールジョークを発表した。英語よりエスペラント語の方が厳格なので、今後Crystalの予約語などはエスペラント語になるとのことだった。
+  ~ aryさんが恒例の[エイプリルフールジョークを発表](https://github.com/crystal-lang/crystal/issues/2394)した。英語よりエスペラント語の方が厳格なので、今後Crystalの予約語などはエスペラント語になるとのことだった。
   ~ Ruby Argentina User GroupでCrystal Meetupが始めて開催された。
   ~ バージョン0.15.0がリリースされた。
 
 5月
   ~ アルゼンチンで2回目のCrystal Meetupが開催され、オンライン中継された。
   ~ バージョン0.16.0、0.17.0がリリースされた。コンパイル速度改善のための布石としてグローバル変数やインスタンス変数に対する新たな型推論の方式が導入された。
-  ~ sidekiqの作者であるMike PerhamさんがRubyからCrystalへsidekiqの基本機能を移植した。その後、3週間でほぼ全機能を移植する。
+  ~ sidekiqの作者であるMike PerhamさんがRubyからCrystalへ[sidekiq.cr](https://github.com/mperham/sidekiq.cr)として基本機能を移植した。その後、3週間でほぼ全機能を移植する。
   ~ 他にも、ブラジルのRuby伝道師AkitaOnRailsさんがMangaReader DownloaderをRubyから移植して公開した。
 
 6月
