@@ -9,7 +9,7 @@
 ### 2011年
 
 6月
-  ~ Manastech社のaryさんによりProof of ConceptとしてコンパイラはRubyで書かれる。「Ruby記述そっくりなのに実行速度が早い」を目標とし検討が始まった。
+  ~ Manastech社のaryさんによりProof of ConceptとしてRubyでコンパイラが書かれる。「Ruby記述そっくりなのに実行速度が早い」を目標とし検討が始まった。
 
 ### 2012年
 
