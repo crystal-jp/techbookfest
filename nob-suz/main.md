@@ -51,9 +51,9 @@
 
 　　　Matzさん AryさんのジョークをTweet。
 　　　
-　　　ロシアのkostyaさん　[Crystal implementations for The Computer Language Benchmarks Game](https://github.com/kostya/crystal-benchmarks-game)を公開。
+　　　ロシアのkostyaさん Crystal implementations for The Computer Language Benchmarks Gameを公開。
 　　　
-　　　Kostya さん　[Some benchmarks of different languages](https://github.com/kostya/benchmarks) も公開。
+　　　Kostya さん Some benchmarks of different languagesも公開。
 
 ５月　言語仕様の[ドキュメント化](http://crystal-lang.org/docs/)が完成（従来よりソースコード内にMarkdownでコメントされるためリアルタイムで更新されていた）。
 
