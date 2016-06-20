@@ -1,6 +1,6 @@
 # Crystal言語の開発過程と コミュニテイの盛り上がりを振り返ってみて
 
-[Crystal言語](http://crystal-lang.org/) 開発の歴史は、2016 年４月に開発元の [Manastech社](http://manas.com.ar/tools/)初めての Blog [The story behind #CrystalLang](http://manas.com.ar/blog/2016/04/01/the-story-behind-crystal.html) 掲載により、詳細に明らかにされた。 2011 年6 月 Ary Borenszweig さんの考案で始まり、その後主として Juan Wajnerman さん、 Brian J. Cardiff さんが加わり、GitHub でのご存知のようなプロジェクトに発展した。
+[Crystal言語](http://crystal-lang.org/) 開発の歴史は、2016 年４月に開発元の [Manastech社](http://manas.com.ar/tools/)初めての Blog [The story behind #CrystalLang](http://manas.com.ar/blog/2016/04/01/the-story-behind-crystal.html) 掲載により、詳細に明らかにされた。 2011 年6 月 Ary Borenszweig さんの考案で始まり、その後主として Juan Wajnerman さん、Brian J. Cardiff さんが加わり、GitHub でのご存知のようなプロジェクトに発展した。
 以下に 、この Crystal言語の開発と発展に貢献された開発関係者と、そして一緒に歩んだコミュニテイの素晴らしい成長発展の歴史を、記録に残すものとする。
 
 まず 2014年 までの主要なターニングポイントを少し羅列し、近年2015年、2016年の足取りをまとめる。
@@ -21,15 +21,15 @@
 コンパイル時間が、コード規模に対し、指数的に増大する傾向のため、特に型推定を容易にするため一部明示的記述を導入、コンパイル速度は3万行のコンパイラ自身10秒で、かつリニアなコンパイル時間を実現した。
 ２月　Lynda_ppさん　[Vim-Crystal 開発を開始](https://github.com/rhysd/vim-crystal)。
 
-３月　[STL-Ruby（セントルイス RubyユーザG）](https://github.com/booch/presentations/tree/master/crystal)でTV遠隔プレゼンで[Aryさん自身が紹介](https://www.youtube.com/watch?v=8BdLttM26V0)。
+３月　[STL-Ruby（セントルイス RubyユーザG）](https://github.com/booch/presentations/tree/master/crystal)でTV遠隔プレゼンで[Aryさん自身が初紹介した](https://www.youtube.com/watch?v=8BdLttM26V0)。
 
 ６月　Ver 0.1 リリース
 
 ９月　[WISIT 2014 で作者Ary/Wajさんが紹介] (https://www.youtube.com/watch?v=XGJh6rNAYfs)
 
-　　　Kamil Lelonek さん　[ベルリン Rug:Byで紹介](http://www.slideshare.net/squixy/crystal-45694037)
+　　　Kamil Lelonek さんが[ベルリン Rug:Byで紹介](http://www.slideshare.net/squixy/crystal-45694037)
 
-10月　[Twitter #Crystallang](https://twitter.com/search?q=%23crystallang&src=typd)　発足した。
+10月　[Twitter #Crystallang](https://twitter.com/search?q=%23crystallang&src=typd)　が発足した。
 
 12月　Rubyを尊敬しつつAnother Languageの道を行くクリスマス宣言がされた。
 
@@ -40,10 +40,10 @@
 
 ３月　作者 Aryさんが MatzさんにCrystalドキュメント化でRubyと同じ文法のところのドキュメントを Rubyから転載したいと申し出たところ、"OKです、私も昔 Perlから転載しました"と返事があった。
 
-　　　Jhassさん　[Play.crystal-Lang.org](https://play.crystal-lang.org/#/cr) を公開、ここからWeb での簡単トライやデイスカッション(例 [IRC CHAT #crystal-lang]
+　　　Jhassさん [Play.crystal-Lang.org](https://play.crystal-lang.org/#/cr) を公開、ここからWeb での簡単トライやデイスカッション(例 [IRC CHAT #crystal-lang]
 (http://irclog.whitequark.org/crystal-lang)）で対象コードを共有しやすくなった。
 
-　　　ysbaddadenさん　[Crystalshards](https://crystalshards.herokuapp.com/)　でGitライブラリ初公開（自動検索）登録はこの時点約 50であった。
+　　　ysbaddadenさん [Crystalshards](https://crystalshards.herokuapp.com/)　でGitライブラリ初公開（自動検索）登録はこの時点約 50であった。
 　　　
 　　　[Twitter:@Crystalshards](https://twitter.com/shardscrystal) も公開。
 
@@ -53,7 +53,7 @@
 　　　
 　　　ロシアのkostyaさん Crystal implementations for The Computer Language Benchmarks Gameを公開。
 　　　
-　　　Kostya さん Some benchmarks of different languagesも公開。
+　　　Kostyaさん Some benchmarks of different languagesも公開。
 
 ５月　言語仕様の[ドキュメント化](http://crystal-lang.org/docs/)が完成（従来よりソースコード内にMarkdownでコメントされるためリアルタイムで更新されていた）。
 
@@ -67,13 +67,13 @@
 　　　
 　　　Rosylillyさん　[日本での勉強会など立ち上げを提案](https://twitter.com/rosylilly/status/607543840052895744?ref_src=twsrc^tfw)、Pine613さんと立ち上げへ進めた。
 　　　
-　　　Matzさん　Lynda_ppさんのCrystal製[ezoeコマンド](https://github.com/rhysd/ezoe)を日本語Tweet、内容は　[”Crystal　すげーっ。”](https://twitter.com/yukihiro_matz/status/610842781091672064)。
+　　　Matzさん Lynda_ppさんのCrystal製[ezoeコマンド](https://github.com/rhysd/ezoe)を日本語Tweet、内容は [”Crystal　すげーっ。”](https://twitter.com/yukihiro_matz/status/610842781091672064)。
 　　　
 　　　トルコのsdogruyolさん Sinatra ライクな[kemal](http://serdardogruyol.com/kemal/) 開発開始。
 
-７月　Matzさん　Mattnさんの Crystalベンチマークを日本語と,[英語で Tweet](https://twitter.com/matz_translated/status/611364736198967297)。
+７月　Matzさん Mattnさんの Crystalベンチマークを日本語と,[英語で Tweet](https://twitter.com/matz_translated/status/611364736198967297)した。
 
-　　　PolyConfで RubyHero2014の Sfericさんが [Crystal言語を紹介](https://www.youtube.com/watch?v=Ysm4IU4aWoQ)。
+　　　PolyConfで RubyHero2014の Sfericさんが [Crystal言語]を紹介した(https://www.youtube.com/watch?v=Ysm4IU4aWoQ)。
 　　　
 　　　CurryOn (旧RuPy Conference) で作者Ary/Waj さんが[紹介](http://2015.ecoop.org/event/curryon-crystal-a-programming-language-for-humans-and-computers)。
 　　　
@@ -88,7 +88,7 @@
 ９月　Manas社外からベルリンのJhassさん（学生）、フランスのysbaddadenさん
 　　　　コミッターへ参加。
 　　　　
-　　　[Crystalshards](https://crystalshards.herokuapp.com/)　ライブラリ　300　突破、半年で６倍
+　　　[Crystalshards](https://crystalshards.herokuapp.com/)　ライブラリ　300　突破、半年で６倍と拡大した。
 
 10月　5t111111さん pine613さん Crystal　[日本語ドキュメント公開](http://ja.crystal-lang.org/docs/installation/index.html)　[日本語サイト公開](http://ja.crystal-lang.org/)
 
@@ -106,7 +106,7 @@
 　　　
 　　　[RubyKaigi2015 Tokyo](http://rubykaigi.org/2015)で Heroku の Will さんが  [Crystal紹介](http://rubykaigi.org/2015/presentations/leinweber) 。
 　　　
-　　　[作者　Future of Crystal Blog](http://crystal-lang.org/2015/12/24/the-future-of-crystal.html) を[Crystal Advent Calendar (JP)](http://www.adventar.org/calendars/800)に合わせて発表。
+　　　[作者 Future of Crystal Blog](http://crystal-lang.org/2015/12/24/the-future-of-crystal.html) を[Crystal Advent Calendar (JP)](http://www.adventar.org/calendars/800)に合わせて発表。
 　　　
 　　　[5t111111さん日本語翻訳](http://fiveteesixone.lackland.io/2015/12/28/the-future-of-crystal/)
 　　　[Hacker News](https://news.ycombinator.com/item?id=10803635) で プログラム言語の将来として議論のトリガーになった。
@@ -114,7 +114,7 @@
 　　　ロシア Kostya さんから[プロダクションに採用して1か月ノートラブルで稼働している](https://groups.google.com/forum/?fromgroups#!topic/crystal-lang/fXTAMilSo_Q)、
 　　　　　というクリスマスメッセージがあった。
 　　　　　
-　　　Ver 0.10 がクリスマスリリース　新コンパイラ方向へ修正が入り始めた。
+　　　Ver 0.10 がクリスマスリリース、これで新コンパイラ方向へ修正が入り始めた。
 　　　
 　　　フランスの ysbaddaden さんがフルスペックの Ruby On Rails ライク [frost](https://github.com/ysbaddaden/frost) を
 　　　　　開発者向けクリスマスリリース公開。
@@ -174,9 +174,9 @@
 
 ６月　Matz さんが、その Blog をリツイート。
 
-　　　Ver.0.18 リリース、 言語仕様拡張は Python, Swift など他言語の良い点は積極的に取り込む方向と、その早い対応が示された。
+　　　Ver.0.18 リリース、 言語仕様拡張は Python, Swift など他言語の良い点は積極的に取り込む方向性と、その早い対応が示された。
 
-　　　Matz さんの 昨年の Crystal 言語関係リツイートはブームを引き起こしたが、きしくも、その1 年後の今回リツイートと Mike Perham さんの Sidekicq.cr 発表の相乗効果で Ver. 0.18 の発表の反応は、かつてない広がりを見せており、Crystal 言語の開発とコミュニテイの広がりが新たな段階へと移行したことを示した。
+　　　Matz さんの 昨年の Crystal 言語関係リツイートはブームを引き起こしたが、奇しくも、その1 年後の今回リツイートと Mike Perham さんの Sidekicq.cr 発表の相乗効果で Ver. 0.18 の発表の反応は、かつてない広がりを見せており、Crystal 言語の開発とコミュニテイの広がりが新たな段階へと移行したことを示した。
 
 # ２０１６年６月時点を数字でまとめると以下となる。
 ## [GitHub](https://github.com/manastech/crystal) 5210star。
@@ -188,7 +188,7 @@
 
  [Crystal言語](http://crystal-lang.org/)が、実際どんなポジションに位置するのか、示す。
 
-最近のプログラミング言語は、オープンソースが好まれたり、GitHub でプログラム言語の開発自体を進めたり、ライブラリやアプリケーションをコミュニテイで共有して時代や技術の進歩に対応していく動きが活発である。
+最近のプログラミング言語は、オープンソースが好まれたり、GitHub　でプログラム言語の開発自体を進めたり、ライブラリやアプリケーションをコミュニテイで共有して時代や技術の進歩に対応していく動きが活発である。
 
 GitHub の動向を見るのに namaristats.com の [Top3 Repos](http://namaristats.com/top3s) は貴重な情報となっている。
 しかし、このページは、ランキングの変化でソートされておらず、近況が見ずらい状況のままである。
@@ -203,11 +203,11 @@ Tiobe や Redmonk よりむしろ実情を表しているように感じられ�
 
 ・Go 言語がすでに Python より上位に表れている。
 
-・Ruby系統言語（Ruby Coffeescript Elixir Groovy）が結構上位に来ている。
+・Ruby系統言語（Ruby Coffeescript Elixir Groovy）が予想以上に上位に来ている。
 
-・TypeScript は意外と上位の印象。
+・TypeScript は意外と上位の印象がある。
 
-・Scala, Swift, Rust が同列で競っている*。
+・Scala, Swift, Rust が同列で競っている。*
 
 ・Elixir は Lua と同列まで追いついている。
 
@@ -215,7 +215,7 @@ Tiobe や Redmonk よりむしろ実情を表しているように感じられ�
 
 ・D, C#, F#, Perl6, Dart は意外と低い。
 
-などが特徴です
+などが特徴である。
 
 ＊Swift オープンソースコンパイラは C++ で記述されているため、これに Star すると Swift ではなく、c++ に加点される。これを加味して Swift 加点を修正すると、Swift Top3 は+20000となり Java, Go に肉薄する。こちらのほうが実情を表していると感じられる。
 
@@ -324,9 +324,9 @@ Tiobe や Redmonk よりむしろ実情を表しているように感じられ�
 50	D　　　　 2700
 
 # コミュニテイ拡大の背景
-Rubyist から見た場合は、習熟のしやすさが Go や Rust より容易です。Gitのアプリの立ち上がりを見ていると数コミットで動き出す例も多い。Crystal に次ぐStar数を急上昇で獲得した、Sinatraライクな[kemal](http://serdardogruyol.com/kemal/)の作者 sdogruyolさんの ”Why Crystal?"（[日本語訳](http://fiveteesixone.lackland.io/2015/12/16/why-crystal/)）がそれを述べている。
+Rubyist から見た場合は、習熟のしやすさが Go や Rust より容易でああることが明らかに長所になっている。Gitのアプリの立ち上がりを見ていると数コミットで動き出す例も多い。Crystal に次ぐStar数を急上昇で獲得した、Sinatraライクな[kemal](http://serdardogruyol.com/kemal/)の作者 sdogruyolさんの ”Why Crystal?"（[日本語訳](http://fiveteesixone.lackland.io/2015/12/16/why-crystal/)）がそれを述べている。
 
 [Crystal](http://crystal-lang.org/)は他の新言語と比べて、Rubyを明瞭にレスぺクトしているため、言語仕様の議論が出ても早く決定され、進化が早い。コンパイラがCrystal自身で書かれセルフホストされていることも要因となっている。Rubyのテストドリブン文化を重視してRSpecサブセットがコンパイラに内蔵されている点も、安定な進化を強化している。またライブラリやアプリの導入速度はRuby エコシステムからの流入速度が強く、その上にC/C++ライブラリーのバインデイングが容易であるため、C/C++エコシステムの導入速度も速いという、ダブル良循環が最も回ってる言語のひとつとなってきていることが見える。
 
-
+以上最近のCrystal言語を取り巻く度動向を概観した。
 
