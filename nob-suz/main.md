@@ -152,9 +152,8 @@
   - QiitaでのCrystalタグの付けらた投稿が107
   - [A list of programming languages that are actively developed on GitHub](https://github.com/showcases/programming-languages)でCrystalは13番目に位置している。
 
+## コミュニテイ拡大の背景
 
+kemalの作者であるsdogruyolさんは[Why Crystal?](http://serdardogruyol.com/why-crystal)^[日本語訳は<http://fiveteesixone.lackland.io/2015/12/16/why-crystal/>]で、その構文や使えるイディオムといった観点から「Crystalは90% Rubyであると考えてよい」と述べている。このようにCrystalはRubyという明確な指標を持っており、またセルフホスティングされていることも相俟って、言語仕様の議論が加速しやすく進化が他の言語に比べて早い。さらに、コンパイラに対するテストもCrystalで書かれていることが安定な進化を強化している。
 
-# コミュニテイ拡大の背景
-Rubyist から見た場合は、習熟のしやすさが Go や Rust より容易です。Gitのアプリの立ち上がりを見ていると数コミットで動き出す例も多い。Crystal に次ぐStar数を急上昇で獲得した、Sinatraライクな[kemal](http://serdardogruyol.com/kemal/)の作者 sdogruyolさんの ”Why Crystal?"（[日本語訳](http://fiveteesixone.lackland.io/2015/12/16/why-crystal/)）がそれを述べている。
-
-[Crystal](http://crystal-lang.org/)は他の新言語と比べて、Rubyを明瞭にレスぺクトしているため、言語仕様の議論が出ても早く決定され、進化が早い。コンパイラがCrystal自身で書かれセルフホストされていることも要因となっている。Rubyのテストドリブン文化を重視してRSpecサブセットがコンパイラに内蔵されている点も、安定な進化を強化している。またライブラリやアプリの導入速度はRuby エコシステムからの流入速度が強く、その上にC/C++ライブラリーのバインデイングが容易であるため、C/C++エコシステムの導入速度も速いという、ダブル良循環が最も回ってる言語のひとつとなってきていることが見える。
+CrystalはC言語やC++で書かれたライブラリのバインディングが容易であり、それらの言語で書かれた過去の資産を簡単に利用することができる（例えばCrystalのコンパイラもLLVMをバインディングして利用している）。それに加えて、sidekiqの例のようにCrystalはRubyからの移植も他の言語に比べると簡単であり、Matzも注目しているように速度はRubyより出るので、Rubyからの移行先として強い可能性を秘めている。その結果、RubyのライブラリをCrystalに移植したものやRubyのライブラリにインスピレーションを受けたものが多く生み出されている。この二つの要因がライブラリの整備を促し、Crystalが人々の注目を集める原動力となっていることは間違いないだろう。
