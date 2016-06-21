@@ -1,5 +1,7 @@
 # Crystal言語の開発過程とコミュニテイの盛り上がりを振り返ってみて
 
+@yahhonob です。C言語での組み込み開発にかかわっています。昔からアセンブラやBasicやToyコンパイラが好きで、RubyやCrystal経験はあまりありませんが、開発裏側に関心が向いてしまいます。
+
 [Crystal言語](http://crystal-lang.org/)の開発の歴史は、2016年4月に開発元の[Manastech社](http://manas.com.ar/)のBlogで「[The story behind #CrystalLang](http://manas.com.ar/blog/2016/04/01/the-story-behind-crystal.html)」という記事が掲載されたことにより、詳細に明らかにされた。以下に、このCrystal言語の開発に貢献された関係者と、一緒に歩んだコミュニテイの素晴らしい成長の歴史を記録に残すものとする。
 
 まず2014年までの主要なターニングポイントを少し羅列し、近年2015年、2016年の足取りをまとめる。
