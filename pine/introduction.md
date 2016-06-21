@@ -95,17 +95,6 @@ Available versions:
 
 ```
 $ crenv install 0.18.0
-Resolving Crystal download URL by Remote Cache ... ok
-Downloading Crystal binary tarball ...
-https://homebrew.bintray.com/bottles/crystal-lang-0.18.0.el_capitan.bottle.tar.gz
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0
-100 9181k  100 9181k    0     0  5548k      0  0:00:01  0:00:01 --:--:-- 54.8M
-ok
-Moving the Crystal directory ...ok
-Checking if Shards already exists ... ok
-Install successful
 ```
 
 Mac OS X環境では、利用可能なHomebrewのバイナリが存在する場合、そちらが優先して利用されます。
