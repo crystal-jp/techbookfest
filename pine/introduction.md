@@ -119,7 +119,7 @@ Crystal 0.18.0 (2016-06-14)
 Homebrewやapt/yumなどを利用することにより、Crystalインストールすることもできます。
 aptやyumはCrystal言語公式のリポジトリが公開されているので、そちらをご利用下さい。
 
-# プロジェクトの作成
+## プロジェクトの作成
 Crystalのインストールが終了したら、プロジェクトを作成してみましょう。
 プロジェクトを作成するには`crystal init`コマンドを利用します。
 
@@ -160,7 +160,7 @@ Initialized empty Git repository in /Users/username/project/example/.git/
 これでexample配下にプロジェクトの雛形が出来上がりました。
 実際の開発では、こちらを利用して開発を進めていくことになります。
 
-# パッケージマネージャー Shards の使い方
+## パッケージマネージャー Shards の使い方
 ShardsはCrystal標準のパッケージマネージャーです。
 先ほど生成した雛形にも含まれている、shard.ymlというファイルを利用します。
 
