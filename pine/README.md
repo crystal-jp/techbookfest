@@ -1,13 +1,18 @@
 # Crystal開発環境の構築
 
+はじめまして。私は[@pine](https://github.com/pine)という名前でOSS活動をしているWeb系のエンジニアです。
+技術は広く浅く触る系で、ある時たまたまCrystalを見かけ、それから触り始めました。
+
 CrystalはRuby風のシンタックスを持ったコンパイル型言語です。
 CrystalはCrystal自身によって書かれたコンパイラを持つ、セルフホスティング言語です。
 そのため、Crystalの開発を始めるには、はじめにバイナリで配られているのコンパイラをインストールする必要があります。
 
 この記事では、Crystalを始めるにあたって必要となる環境構築の方法と、プロジェクトの始め方について解説しています。
 
-## crenv
+## インストール方法
+
 ### crenvとは ?
+
 Crystal をインストールするには、[crenv](https://github.com/pine613/crenv)を使うのが便利です。
 
 crenvはRubyにおけるrbenvからフォークしたツールであり、
@@ -19,6 +24,7 @@ Crystalのバージョンアップにより急に動作しなくなることが�
 そのため、安心して開発に取り組むことができます。
 
 ### 対応環境
+
 Crystalが動作する環境はMac OS X、Linux(i686/x64)及びFreeBSD(x64)です。
 crenvは、そのいずれの環境でも動作します。
 
@@ -32,6 +38,7 @@ crenvは、そのいずれの環境でも動作します。
 - Homebrew (OS X の場合)
 
 ### anyenvを用いてcrenvをインストール(推奨)
+
 [anyenv](https://github.com/riywo/anyenv)という、複数のenv系を切り替えるツールがあります。
 もし、anyenvを既に利用している場合は、以下のコマンドひとつで導入することができます。
 
@@ -48,6 +55,7 @@ $ exec $SHELL -l
 ```
 
 ### 通常のインストール方法
+
 Git コマンドを用いて、以下のようにインストールを行います。
 
 ```
@@ -72,6 +80,7 @@ crenv 1.0.1-7-g585d167
 ```
 
 ### crenvを用いてCrystalをインストール
+
 crenvがインストールされたら、Crystalのインストールに移ります。
 `crenv install -l` を実行して、利用可能なCrystalのバージョンを列挙してみましょう。
 
@@ -97,12 +106,6 @@ Available versions:
 $ crenv install 0.18.0
 Resolving Crystal download URL by Remote Cache ... ok
 Downloading Crystal binary tarball ...
-https://homebrew.bintray.com/bottles/crystal-lang-0.18.0.el_capitan.bottle.tar.gz
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0
-100 9181k  100 9181k    0     0  5548k      0  0:00:01  0:00:01 --:--:-- 54.8M
-ok
 Moving the Crystal directory ...ok
 Checking if Shards already exists ... ok
 Install successful
@@ -126,11 +129,13 @@ $ crystal -v
 Crystal 0.18.0 (2016-06-14)
 ```
 
-## crenv以外のインストール方法
+### crenv以外のインストール方法
+
 Homebrewやapt/yumなどを利用することにより、Crystalインストールすることもできます。
 aptやyumはCrystal言語公式のリポジトリが公開されているので、そちらをご利用下さい。
 
-# プロジェクトの作成
+## プロジェクトの作成
+
 Crystalのインストールが終了したら、プロジェクトを作成してみましょう。
 プロジェクトを作成するには`crystal init`コマンドを利用します。
 
@@ -140,15 +145,15 @@ TYPE is missing
 Usage: crystal init TYPE NAME [DIR]
 
 TYPE is one of:
-    lib                      creates library skeleton
-    app                      creates application skeleton
+    lib    creates library skeleton
+    app    creates application skeleton
 
 NAME - name of project to be generated,
        eg: example
 DIR  - directory where project will be generated,
        default: NAME, eg: ./custom/path/example
 
-    --help                           show this help
+    --help show this help
 ```
 
 作成するプロジェクトの種類として、ライブラリとアプリケーションを選ぶことができます。
@@ -171,7 +176,7 @@ Initialized empty Git repository in /Users/username/project/example/.git/
 これでexample配下にプロジェクトの雛形が出来上がりました。
 実際の開発では、こちらを利用して開発を進めていくことになります。
 
-# パッケージマネージャー Shards の使い方
+## パッケージマネージャー Shards の使い方
 ShardsはCrystal標準のパッケージマネージャーです。
 先ほど生成した雛形にも含まれている、shard.ymlというファイルを利用します。
 

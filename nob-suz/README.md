@@ -1,6 +1,8 @@
-# Crystal言語の開発過程とコミュニテイの盛り上がりを振り返ってみて
+# Crystalの開発過程とコミュニテイの盛り上がりを振り返ってみて
 
-[Crystal言語](http://crystal-lang.org/)の開発の歴史は、2016年4月に開発元の[Manastech社](http://manas.com.ar/)のBlogで「[The story behind #CrystalLang](http://manas.com.ar/blog/2016/04/01/the-story-behind-crystal.html)」という記事が掲載されたことにより、詳細に明らかにされた。以下に、このCrystal言語の開発に貢献された関係者と、一緒に歩んだコミュニテイの素晴らしい成長の歴史を記録に残すものとする。
+@yahhonob です。C言語での組み込み開発にかかわっています。昔からアセンブラやBasicやToyコンパイラが好きで、RubyやCrystal経験はあまりありませんが、開発裏側に関心が向いてしまいます。
+
+[Crystal](http://crystal-lang.org/)の開発の歴史は、2016年4月に開発元の[Manastech社](http://manas.com.ar/)のBlogで「[The story behind #CrystalLang](http://manas.com.ar/blog/2016/04/01/the-story-behind-crystal.html)」という記事が掲載されたことにより、詳細に明らかにされた。以下に、このCrystalの開発に貢献された関係者と、一緒に歩んだコミュニテイの素晴らしい成長の歴史を記録に残すものとする。
 
 まず2014年までの主要なターニングポイントを少し羅列し、近年2015年、2016年の足取りをまとめる。
 
@@ -74,7 +76,7 @@
 
 7月
   ~ MatzさんがmattnさんのCrystalベンチマークを日本語と[英語でツイート](https://twitter.com/matz_translated/status/611364736198967297)する。
-  ~ PolyConfでRubyHero2014のSfericさんが[Crystal言語を紹介](https://www.youtube.com/watch?v=Ysm4IU4aWoQ)した。
+  ~ PolyConfでRubyHero2014のSfericさんが[Crystalを紹介](https://www.youtube.com/watch?v=Ysm4IU4aWoQ)した。
   ~ CurryOnで[AryさんとWaj さんが紹介](http://2015.ecoop.org/event/curryon-crystal-a-programming-language-for-humans-and-computers)した。
   ~ [crystal-jp](http://crystal.connpass.com/)が発足する。
   ~ [東京Crystal勉強会](http://crystal.connpass.com/)の第1回が開催された。

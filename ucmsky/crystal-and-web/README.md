@@ -1,5 +1,7 @@
 # CrystalとWeb
+
 ## CrystalでWebアプリを作成する
+
 Crystalでは標準でWebサーバの機能を提供しています。
 公式のサンプルをそのまま掲載しますが、以下のコードをビルド、実行するとブラウザから「http://localhost:8080」でアクセスするとそのまま「Hello World」が表示されます。
 
@@ -199,7 +201,9 @@ shards install
   <meta charset="utf-8"/>
   <title>kemal sample</title>
   <!-- bootstrapを使用する -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link
+   rel="stylesheet"
+   href="//maxcdn.bootstrapcdn.com/bootstrap /3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/custom.css">
 </head>
 <body>
@@ -360,7 +364,8 @@ require "kemal"
 require "pg"
 require "pool/connection"
 pg = ConnectionPool.new(capacity: 25, timeout: 0.1) do
-  PG.connect("postgres://your_owner@localhost:5432/kemal_sample")
+  PG.connect(
+    "postgres://your_owner@localhost:5432/kemal_sample")
 end
 
 
@@ -438,7 +443,10 @@ KemalはRESTfulに対応しており、get、post以外にも、put、delete、p
 <h2>投稿編集</h2>
 <% articles.each do |article| %>
 <form method="post", action="/articles/<%=article["id"] %>">
-  <!-- hiddenフィールドにname="_method"、valueにputを設定する。 -->
+  <!--
+   hiddenフィールドにname="_method"、
+   valueにputを設定する。
+  -->
   <input type="hidden", name="_method", value="put" />
   <input type="text" name="title" size="10" maxlength="10" value="<%=article["title"] %>" />
   <br />
@@ -501,20 +509,21 @@ Crystalで作成したアプリをHerokuにデプロイすることが出来ま�
 
 URLは以下のとおりです。
 
-heroku-buildpack-crystal
-https://github.com/ucmsky/heroku-buildpack-crystal
+  - heroku-buildpack-crystal
+  - https://github.com/ucmsky/heroku-buildpack-crystal
 
 実装にあたってはElixirのビルドパックを参考にさせていただきました。
 
-heroku-buildpack-elixir
-https://github.com/HashNuke/heroku-buildpack-elixir
+  - heroku-buildpack-elixir
+  - https://github.com/HashNuke/heroku-buildpack-elixir
 
 ### ビルドパックの使い方
 
 Herokuアプリ作成時に以下のコマンドを実行します。
 
 ```
-heroku create --buildpack "https://github.com/ucmsky/heroku-buildpack-crystal.git"
+heroku create --buildpack \
+  "https://github.com/ucmsky/heroku-buildpack-crystal.git"
 ```
 
 本ビルドパックではCrystalのバージョンやビルドコマンドを適宜指定するため、コンフィグファイルをリポジトリに加える必要があります。
@@ -528,8 +537,10 @@ heroku create --buildpack "https://github.com/ucmsky/heroku-buildpack-crystal.gi
 crystal_version=0.17.4
 
 # Always rebuild from scratch on every deploy?
-# ダウンロードしたCrystal本体などをクリアし再ダウンロードするか
-#  Crystalのバージョンを変えてリビルドするときはtrueに設定する
+# ダウンロードしたCrystal本体など
+# をクリアし再ダウンロードするか
+# Crystalのバージョンを変えて
+# リビルドするときはtrueに設定する
 always_rebuild=false
 
 # Export heroku config vars
@@ -553,7 +564,8 @@ build_command=("make db_migrate" "make build")
 # Use latest version
 crystal_version=latest
 
-# ダウンロードしたCrystal本体は再ダウンロードしない
+# ダウンロードした
+# Crystal本体は再ダウンロードしない
 always_rebuild=false
 
 # ビルド時に渡される環境変数は"DATABASE_URL"

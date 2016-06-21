@@ -5,14 +5,24 @@ PANDOC_FILTER = build/pandoc_filter
 
 PANDOC_OPT  = \
 	--latex-engine=lualatex               \
-	-V documentclass=ltjsbook             \
+	-V documentclass=bxjsbook             \
+	-V papersize=b5                       \
+	-V classoption=pandoc                 \
+	-V classoption=jafont=ipaex           \
 	--number-sections --toc --toc-depth=2 \
 	--chapters                            \
 	--listings -H tools/header.tex
 CRYSTAL_OPT = --release
 
-MD =            \
-	index.md
+MD =                                       \
+	index.md                                 \
+	pine/README.md                           \
+	arcage/README.md                         \
+	ucmsky/crystal-and-web/README.md         \
+	ucmsky/metaprogramming-crystal/README.md \
+	rhysd/README.md                          \
+	nob-suz/README.md                        \
+	MakeNowJust/README.md                    \
 
 .PHONY: all
 all: build/techbookfest.pdf

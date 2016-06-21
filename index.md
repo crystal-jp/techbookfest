@@ -1,4 +1,6 @@
 ---
-title: crystalの本
+title: |
+  ![logo](logo.png)  
+  crystalの本
 author: crystal-jp
 ---
