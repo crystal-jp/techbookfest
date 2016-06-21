@@ -54,7 +54,8 @@ p typeof(a)
 b = a.upcase
 typeof(b)
 # => String
-# String#upcaseの返り値はString型だからこれもString型
+# String#upcaseの返り値はString型だから
+# これもString型
 ```
 
 ```crystal
@@ -65,7 +66,8 @@ end
 
 p typeof(foo(123))
 # => String
-# fooメソッドは必ずString型の値を返すからこれもString型
+# fooメソッドは必ずString型の値を返すから
+# これもString型
 ```
 
 ### ユニオン型（union type）
@@ -89,7 +91,7 @@ p typeof(c)
 ```crystal
 # 先ほどの続き
 
-# #not_nil!はString型にもSymbol型にもあるので使用可
+# #not_nil!はどちらにもあるので使用可
 p c.not_nil!
 # => "string"
 
@@ -114,7 +116,7 @@ Rubyなどで良く見かける「ある条件を満たしていれば値を返�
 
 Rubyではメソッドの引数に型を指定できません。同じメソッド名で異なる引数のパターンを処理できるようにするには、変数にデフォルト値を設定して省略可能にしたり、メソッド内で型チェックを行って処理を分岐させる必要があります。Crystalでも同じような処理は可能ですが、そのほかにCrystalでは引数の型を指定できるようになった恩恵として、メソッドのオーバーロードが可能になっています。つまり、同じメソッド名であっても受け取る引数のパターンごとに異なる処理を記述することができるのです。
 
-```ruby
+```crystal
 # 整数値か16進数の文字列を2倍にして値を返す(Ruby)
 
 def dbl(value)
@@ -350,7 +352,7 @@ class B < A
   # => Error: abstract `def A#b(bb : Int32)` must be implemented by B
 
   # 抽象メソッドの引数が型制約なしであれば、
-  # 実装時に型制約がかかっていてもエラーにはならない
+  # 実装時に型制約がかかっていてもOK
   def c(cc : Int32)
     cc + 1
   end
@@ -374,13 +376,13 @@ class A
   @a : String
 
   def initialize(@a)
-    # 余談：Crystalではメソッド引数を
-    #      直接インスタンス変数に代入できます。便利!!
+    # メソッド引数を直接インスタンス変数に
+    # 代入できます。便利!!
   end
 end
 
 class B
-  # getterがアクセスするインスタンス変数@bはString型
+  # getterがアクセスする@bはString型
   getter b : String
 
   def initialize(@b)
@@ -388,7 +390,8 @@ class B
 end
 
 class C
-  # C.newの第一引数はString型限定だから@cはString型
+  # C.newの第一引数はString型だから
+  # @cはString型
   def initialize(@c : Sring)
   end
 end
@@ -747,7 +750,7 @@ arr = []
 「要素の型」をコンパイラに伝える方法の1つは、上でも紹介した初期化時に値を与える方法です。Crystalのコンパイラが、初期値として与えられているオブジェクトの型から「要素の型」を推測してくれます。空の配列を初期化する場合も型の指定が必要で、そのためには`Array(要素の型).new`メソッドを使って初期化する方法と、型を指定するリテラル形式`[] of 要素の型`で初期化するという2種類の方法が用意されています。
 
 ```crystal
-# どちらも空のArray(Int32)オブジェクトとして初期化される
+# どちらもArray(Int32)型として初期化される
 arr = Array(Int32).new
 arr = [] of Int32
 ```
@@ -804,8 +807,8 @@ p Slice["a", "b", "c"]
 p Slice.new(2, "a")
 # => Slice["a", "a"]
 
-# 要素の型がプリミティブであれば要素数のみでも初期化可能
-# （各値はゼロ初期化）
+# 要素の型がプリミティブな型であれば
+# 要素数のみでも初期化可能
 p Slice(UInt32).new(3)
 # => Slice[0, 0, 0]
 
@@ -968,7 +971,8 @@ hash = {}
 「キーの型」や「値の型」をコンパイラに伝える方法の1つは、上でも紹介した初期化時に値を与える方法です。Crystalのコンパイラが、初期値として与えられているオブジェクトの型から「キーの型」と「値の型」を推測してくれます。空のハッシュを初期化する場合も型の指定が必要で、そのために`Hash(キーの型, 値の型).new`メソッドを使う方法と、型を指定するリテラル形式`{} of キーの型 => 値の型`を使うという2種類の方法が用意されています。
 
 ```crystal
-# どちらも空のHash(String, Int32)オブジェクトで初期化される
+# どちらもHash(String, Int32)型として
+# 初期化される
 hash = Hash(String, Int32).new
 hash = {} of String => Int32
 ```
@@ -1076,7 +1080,7 @@ def buz(a : String = "abc", b : Int32 = 2 , c : Bool = false)
   c ? d.upcase : d
 end
 
-# 名前付きタプルなら途中の引数でも省略して実行可能
+# 名前付きタプルなら途中の引数を省略して実行可能
 ntpl = {a: "xyz", c: true}
 p buz(**ntpl)
 # => "XYZXYZ"
@@ -1212,14 +1216,10 @@ bar = class_of_foo.new
 # #is_a?の引数には指定できない
 p bar.is_a?(class_of_foo)
 # => Syntax error: expecting token 'CONST', not 'class_of_foo'
-#    p bar.is_a?(class_of_foo)
-#                ^
 
 # クラス定数も参照できない
 p class_of_foo::BAA
 # => Syntax error: unexpected token: ::
-#    p class_of_foo::BAA
-#                  ^
 ```
 
 エラーメッセージを見る限り、どちらのエラーも構文解析上の問題みたいですね。
@@ -1239,7 +1239,7 @@ foo = Foo.new
 bar = arr.first?
 
 if bar.class == foo.class
-  # コンパイラはbarがFoo型であるとは認識できない
+  # コンパイラはbarがFoo型であると認識できない
   p bar.buz
   # => Error: undefined method 'buz' for Nil (compile-time type is Foo?)
 end
