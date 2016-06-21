@@ -1,5 +1,7 @@
-Make a Lisp with Crystal!
-=========================
+Crystal で Lisp 処理系を実装しよう
+==================================
+
+rhysd (GitHub: @rhysd, Twitter: @Linda_pp) と申します。プログラミング関連ツールが好きで C++ と LLVM で言語処理系をつくったり、Vim のプラグインをつくったり、Electron でデスクトップアプリをつくったりしてます。
 
 ## はじめに
 
