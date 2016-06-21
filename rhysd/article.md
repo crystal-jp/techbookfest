@@ -1,7 +1,7 @@
 Crystal で Lisp 処理系を実装しよう
 ==================================
 
-rhysd (GitHub: @rhysd, Twitter: @Linda_pp) と申します。プログラミング関連ツールが好きで C++ と LLVM で言語処理系をつくったり、Vim のプラグインをつくったり、Electron でデスクトップアプリをつくったりしてます。
+rhysd (GitHub: @rhysd, Twitter: @Linda_pp) と申します。プログラミング関連ツールが好きで C++ と LLVM で言語処理系をつくったり、Vim のプラグインをつくったり、Electron で Neovim frontend や markdown プレビューをつくったりしてます。
 
 ## はじめに
 
@@ -111,18 +111,27 @@ step 1 では REPL の外枠部分として読み込みと表示部分をつく�
 
 `reader.cr` は 入力された Lisp の式をトークンごとにバラバラにし (tokenize) 、トークンを読んで AST  (抽象構文木) に変換 (parse) します。AST とはそのプログラムの構造を木構造で表したものです。木構造にすることで、プログラムから扱うのが容易になります。
 
-![トークンの切り出しとパース](pic1.png)
+![トークンの切り出しとパース](rhysd/pic1.png)
 
 最初に `tokenize` を実装します。ここでは `"(+ 10 22)"` を `["(", "+", "10", "22", ")"]` というふうに不要な空白や改行を削除しトークンに分けます。
 
 ```crystal
 def tokenize(str)
-  regex = /[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)/
+  # 注：実際は1行
+  regex =
+      /[\s,]*(
+          ~@|
+          [\[\]{}()'`~^@]|
+          "(?:\\.|[^\\"])*"|
+          ;.*|
+          [^\s\[\]{}('"`,;)]*
+      )/
+
   str.scan(regex).map{|m| m[1]}.reject(&.empty?)
 end
 ```
 
-なんとこれだけです。Lisp は括弧を多用する構文のため、正規表現で分割し空文字列を除去するだけで簡単にトークンに切り分けることができます。正規表現の各部分について説明します。
+なんとこれだけです（分かりやすいように正規表現を改行していますが、実際は1行です）。Lisp は括弧を多用する構文のため、正規表現で分割し空文字列を除去するだけで簡単にトークンに切り分けることができます。正規表現の各部分について説明します。
 
 * `[\s,]*`: 空白とコンマにマッチして読み飛ばします
 * `~@`: unquote に使う単項演算子を切り出します
@@ -312,14 +321,18 @@ def read_atom
   throw "expected Atom but got EOF" unless token
 
   Mal::Type.new case
-    when token =~ /^-?\d+$/ then token.to_i
-    when token == "true"    then true
-    when token == "false"   then false
-    when token == "nil"     then nil
-    when token[0] == '"'    then token[1..-2].gsub(/\\"/, "\"")
-                                             .gsub(/\\n/, "\n")
-                                             .gsub(/\\\\/, "\\")
-    else Mal::Symbol.new token
+    when token =~ /^-?\d+$/
+      token.to_i
+    when token == "true"
+      true
+    when token == "false"
+      false
+    when token == "nil"
+      nil
+    when token[0] == '"'
+      token[1..-2].gsub(/\\"/, "\"").gsub(/\\n/, "\n").gsub(/\\\\/, "\\")
+    else
+      Mal::Symbol.new token
     end
 end
 ```
@@ -596,7 +609,7 @@ mal における環境 (Environments) とは、変数のシンボルと値を組
 
 式の中にシンボルが出現した時は、現在の環境の中のシンボルテーブルを検索し、該当シンボルがあればその値に評価される→無ければより外側の環境を探す→… というふうに環境を辿ります。
 
-![ネストした環境の定義](pic2.png)
+![ネストした環境の定義](rhysd/pic2.png)
 
 それでは、`step2_eval.cr` を `step3_env.cr` に名前を変え、環境を表すクラス `Env` を定義するファイル `env.cr` を追加しましょう。
 
