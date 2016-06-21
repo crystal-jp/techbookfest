@@ -18,8 +18,8 @@ MD =                                       \
 	index.md                                 \
 	pine/README.md                           \
 	arcage/README.md                         \
-	ucmsky/crystal-and-web/README.md         \
 	ucmsky/metaprogramming-crystal/README.md \
+	ucmsky/crystal-and-web/README.md         \
 	rhysd/README.md                          \
 	nob-suz/README.md                        \
 	MakeNowJust/README.md                    \

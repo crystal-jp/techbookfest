@@ -1,5 +1,7 @@
 # CrystalとWeb
 
+メタプログラミングに続いて@ucmskyが本稿を担当します。本稿ではCrystalをWeb方面で活用する方法について記載します。
+
 ## CrystalでWebアプリを作成する
 
 Crystalでは標準でWebサーバの機能を提供しています。

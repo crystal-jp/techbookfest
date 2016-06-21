@@ -1,6 +1,6 @@
 # Crystal開発環境の構築
 
-はじめまして。私は[@pine](https://github.com/pine)という名前でOSS活動をしているWeb系のエンジニアです。
+はじめまして。私は[\@pine](https://github.com/pine)という名前でOSS活動をしているWeb系のエンジニアです。
 技術は広く浅く触る系で、ある時たまたまCrystalを見かけ、それから触り始めました。
 
 CrystalはRuby風のシンタックスを持ったコンパイル型言語です。
@@ -13,7 +13,7 @@ CrystalはCrystal自身によって書かれたコンパイラを持つ、セル
 
 ### crenvとは ?
 
-Crystal をインストールするには、[crenv](https://github.com/pine613/crenv)を使うのが便利です。
+Crystal をインストールするには、[crenv](https://github.com/pine/crenv)を使うのが便利です。
 
 crenvはRubyにおけるrbenvからフォークしたツールであり、
 プロジェクトごとに任意のバージョンのCrystalを用いることを容易にします。

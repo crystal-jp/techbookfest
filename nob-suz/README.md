@@ -155,6 +155,6 @@
 
 ## コミュニテイ拡大の背景
 
-kemalの作者であるsdogruyolさんは[Why Crystal?](http://serdardogruyol.com/why-crystal)^[日本語訳は<http://fiveteesixone.lackland.io/2015/12/16/why-crystal/>]で、その構文や使えるイディオムといった観点から「Crystalは90% Rubyであると考えてよい」と述べている。このようにCrystalはRubyという明確な指標を持っており、またセルフホスティングされていることも相俟って、言語仕様の議論が加速しやすく進化が他の言語に比べて早い。さらに、コンパイラに対するテストもCrystalで書かれていることが安定な進化を強化している。
+kemalの作者であるsdogruyolさんは[Why Crystal?](http://serdardogruyol.com/why-crystal)^[日本語訳は<http://fiveteesixone.lackland.io/2015/12/16/why-crystal/>]で、その構文や使えるイディオムといった観点から「Crystalは90% Rubyであると考えてよい」と述べている。CrystalはRubyという明確な指標を持っており、またセルフホスティングされていることも相俟って、言語仕様の議論が加速しやすく進化が他の言語に比べて早い。さらに、コンパイラに対するテストもCrystalで書かれていることが安定な進化を強化している。
 
 CrystalはC言語やC++で書かれたライブラリのバインディングが容易であり、それらの言語で書かれた過去の資産を簡単に利用することができる（例えばCrystalのコンパイラもLLVMをバインディングして利用している）。それに加えて、sidekiqの例のようにCrystalはRubyからの移植も他の言語に比べると簡単であり、Matzも注目しているように速度はRubyより出るので、Rubyからの移行先として強い可能性を秘めている。その結果、RubyのライブラリをCrystalに移植したものやRubyのライブラリにインスピレーションを受けたものが多く生み出されている。この二つの要因がライブラリの整備を促し、Crystalが人々の注目を集める原動力となっていることは間違いないだろう。
