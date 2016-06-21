@@ -21,7 +21,7 @@ $\thispagestyle{empty}$
 $\thispagestyle{empty}$
 
 \newpage
-$\vspace*{100ex}$
+$\vspace*{80ex}$
 $\thispagestyle{empty}$
 
 「crystalの本」

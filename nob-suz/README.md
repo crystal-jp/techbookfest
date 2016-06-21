@@ -110,7 +110,7 @@
   - GitHubのプロジェクトのスター数が4000
   - コントリビュータが110名（日本からは5名が連名）
   - GitHubにホスティングされているCrystalのプロジェクト数が450
-  - QiitaでのCrystalタグの付けらた投稿が80
+  - QiitaでのCrystalタグの付けられた投稿が80
 
 ### 2016年
 
@@ -149,8 +149,8 @@
 2016年6月時点を数字でまとめると以下が参考となる。
 
   - GitHubのプロジェクトのスター数が5120
-  - GitHubでホスティングされているCrystalのプロジェクト数が450
-  - QiitaでのCrystalタグの付けらた投稿が107
+  - GitHubでホスティングされているCrystalのプロジェクト数が822
+  - QiitaでのCrystalタグの付けられた投稿が107
   - [A list of programming languages that are actively developed on GitHub](https://github.com/showcases/programming-languages)でCrystalは13番目に位置している。
 
 ## コミュニテイ拡大の背景

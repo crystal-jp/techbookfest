@@ -3,15 +3,20 @@ CRYSTAL = crystal
 
 PANDOC_FILTER = build/pandoc_filter
 
-PANDOC_OPT  = \
-	--latex-engine=lualatex               \
-	-V documentclass=bxjsbook             \
-	-V papersize=b5                       \
-	-V classoption=pandoc                 \
-	-V classoption=jafont=ipaex           \
-	--number-sections --toc --toc-depth=2 \
-	--chapters                            \
-	--listings -H tools/header.tex
+PANDOC_OPT  =                 \
+	--latex-engine=lualatex     \
+	-V documentclass=bxjsbook   \
+	-V papersize=a5             \
+	-V fontsize=8pt             \
+	-V classoption=pandoc       \
+	-V classoption=jafont=ipaex \
+	--number-sections           \
+	--toc                       \
+	--toc-depth=2               \
+	--chapters                  \
+	--listings                  \
+	-H tools/header.tex         \
+
 CRYSTAL_OPT = --release
 
 MD =                                       \
